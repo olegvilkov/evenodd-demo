@@ -1,0 +1,20 @@
+rules_version = '2';
+service cloud.firestore {
+	match /databases/{database}/documents {
+  
+    // Returns `true` if the requested post is 'published'
+    // or the user authored the post
+    function authorOrPublished(game) {
+      return get(/databases/$(database)/documents/games/$(game)/players);
+    }
+  
+    // A write rule can be divided into create, update, and delete rules
+      match /games/{game} {
+        allow write: if authorOrPublished(game);
+        allow read: if true;
+        allow create: if true;
+      }
+      
+      
+    }
+}
