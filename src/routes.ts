@@ -1,5 +1,5 @@
 // Import pages components
-import SelectGamePage from './pages/SelectGamePage';
+import GamesListPage from './pages/GamesListPage';
 import GamePage from './pages/GamePage';
 import JoinGamePage from './pages/JoinGamePage';
 import CreateGamePage from './pages/CreateGamePage';
@@ -7,7 +7,7 @@ import CreateGamePage from './pages/CreateGamePage';
 export default [
     {
       path: '/',
-      component: SelectGamePage,
+      component: GamesListPage,
     },
     {
       path: '/game/:gameid',
