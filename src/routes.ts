@@ -1,19 +1,15 @@
 // Import pages components
-import HomePage from './pages/HomePage';
-// import AboutPage from 'about.jsx';
+import SelectGamePage from './pages/SelectGamePage';
+import GamePage from './pages/GamePage';
 // import LoginPage from 'login.jsx';
 
 export default [
     {
-        path: '/',
-        component: HomePage,
+      path: '/',
+      component: SelectGamePage,
     },
-    // {
-    //   path: '/about/',
-    //   component: AboutPage,
-    // },
-    // {
-    //   path: '/login/',
-    //   component: LoginPage,
-    // },
+    {
+      path: '/game/:gameid',
+      component: GamePage,
+    },
 ];

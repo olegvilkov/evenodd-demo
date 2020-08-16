@@ -1,9 +1,9 @@
 import React from 'react'
 
-export default function HomePage () {
+export default function GamePage () {
     return (
         <h1>
-            Home Page
+            Game Page
         </h1>
     )
 }
