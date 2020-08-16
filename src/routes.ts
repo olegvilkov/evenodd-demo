@@ -1,7 +1,7 @@
 // Import pages components
 import SelectGamePage from './pages/SelectGamePage';
 import GamePage from './pages/GamePage';
-// import LoginPage from 'login.jsx';
+import JoinGamePage from './pages/JoinGamePage';
 
 export default [
     {
@@ -11,5 +11,9 @@ export default [
     {
       path: '/game/:gameid',
       component: GamePage,
+    },
+    {
+      path: '/join/:gameid',
+      component: JoinGamePage,
     },
 ];
