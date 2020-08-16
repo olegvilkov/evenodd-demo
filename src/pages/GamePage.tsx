@@ -10,7 +10,7 @@ interface Props {
     waitTurn: boolean,
 }
 
-export default function GamePage ({waitTurn}: Props) {
+export default function GamePage ({winner, waitTurn}: Props) {
 
     f7ready(() => {
         // Пока участник ждёт других игроков, экран блокируется
@@ -20,6 +20,11 @@ export default function GamePage ({waitTurn}: Props) {
             f7.dialog.close();
         }
 
+        // Когда игра закончилась, выводим сообщение, что игра закончена и имя победителя
+        if (winner) {
+            f7.dialog.close();
+            f7.dialog.alert(`Победитель <b>${winner}</b>`, 'Игра закончена');
+        }
     });
 
     return (
