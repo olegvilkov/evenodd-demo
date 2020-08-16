@@ -7,6 +7,7 @@ import { App, View } from 'framework7-react';
 import routes from './routes';
 
 const f7params = {
+  theme: 'auto',
   name: 'EvenOdd-demo',
   id: 'app.web.evenodd-demo',
   routes,

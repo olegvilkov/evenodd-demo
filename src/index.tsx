@@ -6,6 +6,9 @@ import App from './App';
 // Import F7 Bundle
 import Framework7 from 'framework7/framework7-lite.esm.bundle.js';
 
+// Path to Framework7 Library CSS Bundle
+import 'framework7/css/framework7.bundle.min.css';
+
 // Import F7-React Plugin
 import Framework7React from 'framework7-react';
 
