@@ -2,6 +2,7 @@
 import SelectGamePage from './pages/SelectGamePage';
 import GamePage from './pages/GamePage';
 import JoinGamePage from './pages/JoinGamePage';
+import CreateGamePage from './pages/CreateGamePage';
 
 export default [
     {
@@ -15,5 +16,9 @@ export default [
     {
       path: '/join/:gameid',
       component: JoinGamePage,
+    },
+    {
+      path: '/create',
+      component: CreateGamePage,
     },
 ];
