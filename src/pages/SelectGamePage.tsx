@@ -7,9 +7,9 @@ export default function SelectGamePage () {
        <Page>
          <BlockTitle>Select Game</BlockTitle>
          <List>
-            <ListItem title="Game 1" link="#"></ListItem>
-            <ListItem title="Game 2" link="#"></ListItem>
-            <ListItem title="Game 3" link="#"></ListItem>
+            <ListItem title="Game 1" link="#" after="5/10"></ListItem>
+            <ListItem title="Game 2" link="#" after="5/10"></ListItem>
+            <ListItem title="Game 3" link="#" after="5/10"></ListItem>
          </List>
        </Page>
     )
