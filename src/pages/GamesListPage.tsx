@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { Page, Block, Toolbar, Link, List, ListItem, Navbar } from 'framework7-react';
+import { Page, Toolbar, Link, List, ListItem, Navbar } from 'framework7-react';
 
 /**
  * Экран "Список игр"
