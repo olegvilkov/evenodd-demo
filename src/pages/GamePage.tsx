@@ -1,16 +1,24 @@
 import React from 'react';
 
-import { Page, BlockTitle, List, ListItem } from 'framework7-react';
+import { Page, BlockTitle, Block, Row, Col, Button, Navbar, List, ListItem, Stepper } from 'framework7-react';
 
 export default function GamePage () {
     return (
        <Page>
-        <BlockTitle>Simple Links List</BlockTitle>
+        <Navbar title="Game 1" />
+        <BlockTitle>Угадайте четное или нечетное число загадал предыдущий участник</BlockTitle>
         <List>
-            <ListItem title="Link 1" link="#"></ListItem>
-            <ListItem title="Link 2" link="#"></ListItem>
-            <ListItem title="Link 3" link="#"></ListItem>
+            {/* Additional "radio" prop to enable radio list item */}
+            <ListItem radio value="check_1" name="demo-radio" title="Чётное"></ListItem>
+            <ListItem radio value="check_2" name="demo-radio" title="Нечётное"></ListItem>
         </List>
+        <BlockTitle>Загадайте своё число для следующего игрока</BlockTitle>
+        <Block className="text-align-center">
+          <Stepper fill></Stepper>
+        </Block>
+        <Block>
+           <Button fill>Отправить</Button>
+        </Block>
        </Page>
     )
 }
