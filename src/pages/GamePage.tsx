@@ -1,6 +1,7 @@
 import React from 'react';
 
-import { Page, BlockTitle, Block, Row, Col, Button, Navbar, List, ListItem, Stepper } from 'framework7-react';
+import { Page, BlockTitle, Block, Button, Navbar, List, ListItem, Stepper } from 'framework7-react';
+import ScoreList from 'components/ScoreList';
 
 export default function GamePage () {
     return (
@@ -19,6 +20,8 @@ export default function GamePage () {
         <Block>
            <Button fill>Отправить</Button>
         </Block>
+
+        <ScoreList/>
        </Page>
     )
 }
