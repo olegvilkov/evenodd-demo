@@ -1,5 +1,4 @@
 import React from 'react';
-import './App.css';
 
 import { App, View } from 'framework7-react';
 
