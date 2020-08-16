@@ -10,6 +10,9 @@ const f7params = {
   theme: 'auto',
   name: 'EvenOdd-demo',
   id: 'app.web.evenodd-demo',
+  view: {
+    pushState: true,
+  },
   routes,
 };
 
