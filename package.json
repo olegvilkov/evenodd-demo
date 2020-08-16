@@ -15,7 +15,9 @@
     "framework7-react": "^5.7.10",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
+    "react-redux": "^7.2.1",
     "react-scripts": "3.4.2",
+    "redux": "^4.0.5",
     "typescript": "^3.7.5"
   },
   "scripts": {

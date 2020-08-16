@@ -1,0 +1,2 @@
+export const SAVE_RSS_ITEM = 'SAVE_RSS_ITEM'
+export const DELETE_RSS_ITEM = 'DELETE_RSS_ITEM'
