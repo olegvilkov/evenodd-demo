@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 
+import { f7 } from 'framework7-react';
 import { Page, List, Navbar, ListInput, ListButton } from 'framework7-react';
 
 interface Props {
@@ -26,7 +27,7 @@ export default function JoinGamePage ({ game='' }: Props) {
                 />
             </List>
             <List>
-                <ListButton onClick={()=>{}}>Присоединиться</ListButton>
+                <ListButton onClick={()=>{ f7.views.main.router.navigate('/game/1') }}>Присоединиться</ListButton>
             </List>
         </Page>
     )
