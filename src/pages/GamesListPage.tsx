@@ -7,8 +7,9 @@ import { selectGamesList, IGamesState } from 'redux/reducers/gameslist/selector'
 
 /**
  * Экран "Список игр"
+ * 
  * Содержит список текущих игр
- * @todo завершенные игры
+ * @todo Завершенные игры
  */
 function GamesListPage ({ games=[] }: IGamesState) {
     return (
