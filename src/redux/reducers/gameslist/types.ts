@@ -2,6 +2,8 @@
 export interface IGameItem {
     title: string,
     id: string,
+    playersCount: number,
+    maxPlayers: number,
 }
 
 export type IGameList = Array<IGameItem>
