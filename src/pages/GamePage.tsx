@@ -16,24 +16,49 @@ interface Props {
  * Пока участник ждёт других игроков, экран блокируется
  * Когда игра закончилась, выводим сообщение, что игра закончена и имя победителя
  */
-export default function GamePage ({winner='2', waitTurn}: Props) {
+export default function GamePage ({winner, waitTurn}: Props) {
 
-    useEffect(() => {        
-        f7ready(() => {
-            if (waitTurn) {
-                f7.dialog.progress('Сейчас не ваш ход');
-            } else {
-                f7.dialog.close();
-            }
+    const redirectPath = '/';
 
-            if (winner) {
+    useEffect(() => {
+        if (f7.views.main.router.currentRoute.path == redirectPath) {
+            return;
+        }
+
+        if (winner) {
+            const winnerDialog = f7.dialog.create({
+                title: 'Игра закончена',
+                text: `Победитель <b>${winner}</b>`,
+                buttons: [
+                    {
+                        text: 'Ок',
+                        close: false,
+                        onClick: () => {f7.views.main.router.navigate(redirectPath)}
+                    }
+                ]
+            });
+
+            f7ready(() => {
                 f7.dialog.close();
-                f7.dialog.alert(`Победитель <b>${winner}</b>`, 'Игра закончена', function () {
-                    f7.views.main.router.navigate('/')
-                });
-            }
-        })
-    }, [winner])
+                winnerDialog.open();
+            })
+
+            return () => winnerDialog.close();
+        }
+    });
+
+    useEffect(() => {
+        if (!winner) {
+            f7ready(() => {
+                if (waitTurn) {
+                    f7.dialog.progress('Сейчас не ваш ход');
+                } else {
+                    f7.dialog.close();
+                }
+            })
+        }
+        return () => {f7.dialog.close()}
+    });
 
     return (
        <Page loginScreen>
