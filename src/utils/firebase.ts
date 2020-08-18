@@ -1,6 +1,10 @@
 // Firebase App (the core Firebase SDK) is always required and must be listed first
 import * as firebase from "firebase/app";
 
+interface IRemoteConfig {
+  minimumFetchIntervalMillis: number
+}
+
 // App Firebase project configuration
 const firebaseConfig = {
   apiKey: "AIzaSyAqJjx4Zl6gGO_dnkKWUxarmKYW_NySvsc",
@@ -14,5 +18,11 @@ const firebaseConfig = {
 
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
+
+const remoteConfig = firebase.remoteConfig();
+remoteConfig.settings = {
+  minimumFetchIntervalMillis: 3600000,
+  fetchTimeoutMillis: 3600000,
+};
 
 export default firebase

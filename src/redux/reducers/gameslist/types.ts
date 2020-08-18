@@ -1,16 +1,11 @@
 
-export interface IGameItem {
-    title: string,
-    id: string,
-    playersCount: number,
-    maxPlayers: number,
-}
+import { IGame } from './../game/types';
 
-export type IGameList = Array<IGameItem>
+export type IGameList = Array<IGame>;
 
-export interface IAddGameToList {
+export interface IChangeGameInList {
     type: string
-    payload: IGameItem
+    payload: IGame
 }
 
-export type ActionTypes = IAddGameToList;
+export type ActionTypes = IChangeGameInList;
