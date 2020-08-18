@@ -21,7 +21,7 @@ function GamesListPage ({ games=[] }: IGamesState) {
          </Toolbar>
         <List>
             {games.map(
-                game => <ListItem title={game.title} link={`/join/${game.id}`} after={`${game.playersCount}/${game.maxPlayers}`} />
+                game => <ListItem title={game.name} link={`/join/${game.id}`} after={`${game.playersCount}/${game.playersForStart}`} />
             )}
         </List>
        </Page>
