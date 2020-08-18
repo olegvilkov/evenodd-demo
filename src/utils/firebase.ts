@@ -1,9 +1,6 @@
 // Firebase App (the core Firebase SDK) is always required and must be listed first
 import * as firebase from "firebase/app";
-
-interface IRemoteConfig {
-  minimumFetchIntervalMillis: number
-}
+import "firebase/remote-config";
 
 // App Firebase project configuration
 const firebaseConfig = {
@@ -19,10 +16,20 @@ const firebaseConfig = {
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
 
-const remoteConfig = firebase.remoteConfig();
+export const remoteConfig = firebase.remoteConfig();
+
 remoteConfig.settings = {
-  minimumFetchIntervalMillis: 3600000,
-  fetchTimeoutMillis: 3600000,
+  fetchTimeoutMillis: 60000,
+  minimumFetchIntervalMillis: 10000,
 };
 
-export default firebase
+// During development relatively low minimum fetch interval
+if (process.env.NODE_ENV === `development`) {
+  remoteConfig.settings.minimumFetchIntervalMillis = 3600000;
+}
+
+remoteConfig.defaultConfig = ({
+  K: 10
+});
+
+export default firebase;
