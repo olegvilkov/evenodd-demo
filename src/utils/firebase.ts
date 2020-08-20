@@ -1,6 +1,7 @@
 // Firebase App (the core Firebase SDK) is always required and must be listed first
 import * as firebase from "firebase/app";
 import "firebase/remote-config";
+import "firebase/firestore";
 
 // App Firebase project configuration
 const firebaseConfig = {
@@ -15,6 +16,9 @@ const firebaseConfig = {
 
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
+
+export const dbHelper = firebase.firestore;
+export const db = firebase.firestore();
 
 export const remoteConfig = firebase.remoteConfig();
 
