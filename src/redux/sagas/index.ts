@@ -1,9 +1,9 @@
 import { all } from 'redux-saga/effects';
-import { createGameSaga } from './creategame';
+import { createGameSagas } from './creategame';
 
 /**
- * saga to yield all others
+ * root saga
  */
 export default function* sagas() {
-  yield all([...createGameSaga]);
+  yield all([...createGameSagas]);
 }

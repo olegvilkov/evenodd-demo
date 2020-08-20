@@ -1,9 +1,9 @@
 
 export interface IGame {
+    id?: string
     name: string
-    id: string
     playersCount: number
     playersForStart: number
-    minRoundsForWin: number
+    roundsForWin: number
     winner?: string
 }

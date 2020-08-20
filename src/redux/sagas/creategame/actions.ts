@@ -1,8 +1,8 @@
 import { CREATE_GAME } from 'redux/actionTypes';
 import { ICreateGame } from './types';
-import { IGame } from 'redux/reducers/game/types';
 
-export const changeGameInList = (gameItem: IGame): ICreateGame => ({
+export const createGame = (username: string, playersForStart: number): ICreateGame => ({
   type: CREATE_GAME,
-  payload: gameItem,
+  username,
+  playersForStart,
 })

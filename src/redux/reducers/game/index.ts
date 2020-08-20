@@ -1,13 +1,6 @@
 import { IGame } from './types';
 
-const initialState: IGame = {
-    name: 'TEST_GAME_1',
-    id: '1',
-    playersCount: 4,
-    playersForStart: 5,
-    minRoundsForWin: 10,
-    winner: '',
-};
+const initialState = {};
 
 /**
  * Обработка событий текущей игры

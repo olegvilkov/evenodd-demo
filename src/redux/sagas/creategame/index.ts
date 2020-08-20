@@ -1,32 +1,54 @@
 import { CREATE_GAME } from 'redux/actionTypes';
 import { ICreateGame } from './types';
 // import { TemplateLibrary, Template } from '@accordproject/cicero-core';
-import { takeLatest, put, select, takeEvery } from 'redux-saga/effects';
+import { takeLatest, call, put, select, takeEvery } from 'redux-saga/effects';
+import { remoteConfig } from 'utils/firebase';
+import { addAppError } from 'redux/reducers/errors/actions';
+import * as DB from 'database';
 
 // import * as actions from '../actions/templatesActions';
 // import * as selectors from '../selectors/templatesSelectors';
 
-/**
- * worker saga
- * saga which checks if template is in the store
- * and loads the template if it is not
- */
-export function* createGame(action: ICreateGame) {
-//   const templateObjects = yield select(selectors.templateObjects);
 
-//   if (!templateObjects || !templateObjects[action.uri]) {
-//     try {
-//       const templateObj = yield Template.fromUrl(action.uri);
-//       yield put(actions.loadTemplateObjectSuccess(action.uri, templateObj));
-//     } catch (err) {
-//       yield put(actions.loadTemplateObjectError(err));
-//     }
-//   }
+/**
+ * saga which create game in db
+ * and join game by creator
+ * and if failed then dispatch error
+ */
+function* createGame({username, playersForStart}: ICreateGame) {
+  const game = {
+    playersForStart,
+    name: `Создатель: ${username}`,
+    roundsForWin: remoteConfig.getNumber('K'),
+    playersCount: 1,
+  };
+
+  try {
+    const createdGame = yield call(DB.createGame, game);
+    yield joinGame(createdGame.id, username);
+  } catch (e) {
+    yield put( addAppError(e) );
+  }
 }
 
 /**
- * watcher saga
+ * saga which add user to game
+ * and if failed then dispatch error
  */
-export const createGameSaga = [
+function* joinGame(gameId: string, username: string) {
+  const player = {
+    name: username,
+    order: 0,
+    points: 0,
+  };
+  try {
+    yield call(DB.addPlayerToGame, gameId, player);
+  } catch (e) {
+    yield put( addAppError(e) );
+  }  
+}
+
+
+export const createGameSagas = [
   takeLatest(CREATE_GAME, createGame),
 ];

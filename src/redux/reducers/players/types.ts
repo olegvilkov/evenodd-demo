@@ -1,8 +1,8 @@
 
-interface IPlayer {
-    id: string
-    order: number
+export interface IPlayer {
+    id?: string
     name: string
+    order: number
     points: number
 }
 

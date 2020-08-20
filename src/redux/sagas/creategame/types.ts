@@ -1,11 +1,6 @@
 
-import { IGame } from 'redux/reducers/game/types';
-
-export type IGameList = Array<IGame>;
-
 export interface ICreateGame {
     type: string
-    payload: IGame
+    username: string
+    playersForStart: number
 }
-
-export type ActionTypes = ICreateGame;
