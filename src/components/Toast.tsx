@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { f7, f7ready } from 'framework7-react';
 import { Toast as IToast } from 'framework7/components/toast/toast';
 
@@ -7,13 +7,18 @@ import { Toast as IToast } from 'framework7/components/toast/toast';
  */
 export default function Toast (props: IToast.Parameters) {
 
+    let toast: IToast.Toast;
+
     useEffect(() => {
-        const toast = f7.toast.create(props);
+        toast = f7.toast.create(props);
         f7ready(() => {
             toast.open()
         })
-        return () => {toast.destroy()}
-    })
+    }, [props])
+
+    useEffect(() => {
+        return () => {toast.close(); toast.destroy()}
+    }, [])
 
     return null;
 }

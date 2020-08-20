@@ -19,4 +19,4 @@ export const GAME_FINISH = 'GAME_FINISH';
 export const SCORE_CHANGED = 'SCORE_CHANGED';
 
 export const APP_ERROR = 'APP_ERROR';
-export const CLEAR_APP_ERRORS = 'CLEAR_APP_ERRORS';
+export const DELETE_APP_ERRORS = 'DELETE_APP_ERRORS';
