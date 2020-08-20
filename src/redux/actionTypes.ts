@@ -17,3 +17,6 @@ export const GAME_MOVE = 'GAME_MOVE';
 export const GAME_FINISH = 'GAME_FINISH';
 
 export const SCORE_CHANGED = 'SCORE_CHANGED';
+
+export const APP_ERROR = 'APP_ERROR';
+export const CLEAR_APP_ERRORS = 'CLEAR_APP_ERRORS';
