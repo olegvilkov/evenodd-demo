@@ -2,19 +2,45 @@ rules_version = '2';
 service cloud.firestore {
 	match /databases/{database}/documents {
   
-    // Returns `true` if the requested post is 'published'
-    // or the user authored the post
-    function authorOrPublished(game) {
-      return get(/databases/$(database)/documents/games/$(game)/players);
-    }
+      match /{document=**} {
+        allow read, write: if false;
+      }
   
-    // A write rule can be divided into create, update, and delete rules
+      // A write rule can be divided into create, update, and delete rules
       match /games/{game} {
-        allow write: if authorOrPublished(game);
+        allow update: if true;
         allow read: if true;
-        allow create: if true;
+        allow create: if canCreateGame();
       }
       
+      // A write rule can be divided into create, update, and delete rules
+      match /games/{game}/players/{player} {
+        allow update: if true;
+        allow read: if true;
+        allow create: if canCreatePlayer(game);
+      }
+      
+      function canCreateGame () {
+      	return
+        	// name must not be empty
+        	request.resource.data.name != ''
+          // For normal game need 2 or more players
+          && request.resource.data.playersForStart >= 2
+      }
+      
+      function canCreatePlayer (game) {
+      	// let gameAfter = getAfter(/games/$(game));
+      	return
+        	// name must be not empty
+        	request.resource.data.name != ''
+          // test
+          // && gameAfter.playersCount > 0
+          // && request.resource.data.value == resource.data.value +1;
+      }
+      
+      // function canUpdatePlayer (game, player) {}
+      
+      // let gameAfter = getAfter(/databases/$(database)/documents/games/$(game));
       
     }
 }
