@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { f7, f7ready } from 'framework7-react';
 import { Toast as IToast } from 'framework7/components/toast/toast';
 
