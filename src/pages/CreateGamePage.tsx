@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import { createGame } from 'redux/sagas/creategame/actions';
 
-import { Page, List, Navbar, ListInput, ListButton, Link } from 'framework7-react';
+import { Page, List, Navbar, ListInput, ListButton } from 'framework7-react';
 
 const connector = connect(null, { createGame });
 type PropsFromRedux = ConnectedProps<typeof connector>;
