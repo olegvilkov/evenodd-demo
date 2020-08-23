@@ -1,4 +1,4 @@
-import { APP_ERROR, DELETE_APP_ERRORS } from '../../actionTypes';
+import { APP_ERROR, APP_DELETE_ERRORS } from '../../actionTypes';
 
 export type IAppErrors = Array<Error>;
 
@@ -12,7 +12,7 @@ export interface IAddError {
 }
 
 export interface IDeleteErrors {
-    type: typeof DELETE_APP_ERRORS
+    type: typeof APP_DELETE_ERRORS
     errors: IAppErrors
 }
 
