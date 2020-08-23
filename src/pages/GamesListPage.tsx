@@ -1,9 +1,17 @@
-import React from 'react'
+import React, { useEffect } from 'react'
+import { connect, ConnectedProps } from 'react-redux';
+import { selectGamesList } from 'redux/reducers/gameslist/selector';
+import { IGamesListState } from 'redux/reducers/gameslist/types';
+import { subcribeToGamesList, unSubcribeToGamesList } from 'redux/sagas/gameslist/actions';
 
 import { Page, Toolbar, Link, List, ListItem, Navbar } from 'framework7-react';
 
-import { connect } from 'react-redux'
-import { selectGamesList, IGamesState } from 'redux/reducers/gameslist/selector'
+const mapState = (state: IGamesListState) => ({
+    games: selectGamesList(state)
+});
+
+const connector = connect(mapState, { subcribeToGamesList, unSubcribeToGamesList });
+type PropsFromRedux = ConnectedProps<typeof connector>;
 
 /**
  * Экран "Список игр"
@@ -11,7 +19,13 @@ import { selectGamesList, IGamesState } from 'redux/reducers/gameslist/selector'
  * Содержит список текущих игр
  * @todo Завершенные игры
  */
-function GamesListPage ({ games=[] }: IGamesState) {
+function GamesListPage ({ games=[], subcribeToGamesList, unSubcribeToGamesList }: PropsFromRedux) {
+
+    useEffect(() => {
+        subcribeToGamesList();
+        return ()=>{ unSubcribeToGamesList() }
+    }, []);
+
     return (
        <Page>
          <Navbar title="Список игр" />
@@ -21,15 +35,11 @@ function GamesListPage ({ games=[] }: IGamesState) {
          </Toolbar>
         <List>
             {games.map(
-                game => <ListItem title={game.name} link={`/join/${game.id}`} after={`${game.playersCount}/${game.playersForStart}`} />
+                game => <ListItem key={game.id} title={game.name} link={`/join/${game.id}`} after={`${game.playersCount}/${game.playersForStart}`} />
             )}
         </List>
        </Page>
     )
 }
 
-const mapState = (state: IGamesState) => ({
-    games: selectGamesList(state)
-})
-
-export default connect(mapState)(GamesListPage)
+export default connector(GamesListPage)

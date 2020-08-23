@@ -1,8 +1,19 @@
-import { GAMES_LIST_CHANGE } from 'redux/actionTypes';
-import { IChangeGameInList } from './types';
+import { GAMES_LIST_ADD_GAME, GAMES_LIST_CHANGE_GAME, GAMES_LIST_DELETE_GAME } from 'redux/actionTypes';
 import { IGame } from './../game/types';
+import { IGameListAction } from './types';
 
-export const changeGameInList = (gameItem: IGame): IChangeGameInList => ({
-  type: GAMES_LIST_CHANGE,
-  payload: gameItem,
+export const addGame = (payload: IGame): IGameListAction => ({
+  type: GAMES_LIST_ADD_GAME,
+  payload,
 })
+
+export const changeGame = (payload: IGame): IGameListAction => ({
+  type: GAMES_LIST_CHANGE_GAME,
+  payload,
+})
+
+export const deleteGame = (payload: IGame): IGameListAction => ({
+  type: GAMES_LIST_DELETE_GAME,
+  payload,
+})
+

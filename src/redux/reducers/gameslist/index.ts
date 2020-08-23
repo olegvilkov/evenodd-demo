@@ -1,10 +1,7 @@
-import { GAMES_LIST_CHANGE } from '../../actionTypes';
+import { GAMES_LIST_CHANGE_GAME, GAMES_LIST_ADD_GAME, GAMES_LIST_DELETE_GAME } from '../../actionTypes';
 import { ActionTypes, IGameList } from './types';
 
-const initialState: IGameList = [
-     {name: 'TEST_GAME_1', id: '1', playersCount:4, playersForStart:5, minRoundsForWin: 10},
-     {name: 'TEST_GAME_2', id: '2', playersCount:4, playersForStart:5, minRoundsForWin: 10},
-];
+const initialState: IGameList = [];
 
 /**
  * Обработка событий списка игр
@@ -12,8 +9,14 @@ const initialState: IGameList = [
 export default function gamesListReducer (state = initialState, action: ActionTypes) {
   switch (action.type) {
     
-    case GAMES_LIST_CHANGE:
+    case GAMES_LIST_ADD_GAME:
       return [...state, action.payload];
+
+    case GAMES_LIST_CHANGE_GAME:
+      return state.map(game => game.id == action.payload.id ? action.payload : game);
+
+    case GAMES_LIST_DELETE_GAME:
+      return state.filter(game => game.id != action.payload.id);
         
     default:
       return state;
