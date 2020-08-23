@@ -12,23 +12,38 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
  */
 function CreateGamePage ({ createGame }: PropsFromRedux) {
     const [playersForStart, setPlayersForStart] = useState(2);
+    const [playersForStartIsValid, setPlayersForStartIsValid] = useState(true);
     const [username, setUsername] = useState('');
+    const [usernameIsValid, setUsernameIsValid] = useState(true);
+
+    const validateUsername = (username: string) => {
+        setUsernameIsValid (username.replace(/\s*/, '') ? true : false);
+    }
+
+    const setAndValidateUsername = (value: string) => {
+        setUsername(value);
+        validateUsername(value);
+    }
     
+    const submit = () => {
+        createGame(username, playersForStart);
+    }
+
     return (
         <Page loginScreen>
             <Navbar title="Создать игру" backLink={true}/>
             <List form>
-                <Link href={false} color="red">Simple List</Link>
                 <ListInput
                 label="Количество игроков"
                 type="number"
                 min={2}
                 placeholder="Количество игроков"
                 value={playersForStart}
-                onBlur={(e) => setPlayersForStart(Math.max(2, playersForStart))}
+                onValidate={(isValid: boolean) => setPlayersForStartIsValid(isValid)}
                 onInput={(e) => setPlayersForStart(e.target.value)}
-                errorMessage="test"
-                errorMessageForce
+                errorMessage="Должно быть больше или равно 2"
+                required
+                validate
                 />
             </List>
             <List form>
@@ -36,12 +51,15 @@ function CreateGamePage ({ createGame }: PropsFromRedux) {
                 label="Имя"
                 type="text"
                 placeholder="Имя участника"
+                errorMessage="Обязательное поле"
                 value={username}
-                onInput={(e) => setUsername(e.target.value)}
+                onInput={(e) => setAndValidateUsername(e.target.value)}
+                errorMessageForce={!usernameIsValid}
+                onBlur={() => validateUsername(username)}
                 />
             </List>
             <List>
-                <ListButton onClick={()=>{createGame(username, playersForStart)}}>Создать</ListButton>
+                <ListButton onClick={()=>submit()}>Создать</ListButton>
             </List>
         </Page>
     )
