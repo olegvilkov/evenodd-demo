@@ -14,7 +14,8 @@ function CreateGamePage ({ createGame }: PropsFromRedux) {
     const [playersForStart, setPlayersForStart] = useState(2);
     const [playersForStartIsValid, setPlayersForStartIsValid] = useState(true);
     const [username, setUsername] = useState('');
-    const [usernameIsValid, setUsernameIsValid] = useState(true);
+    const [usernameIsValid, setUsernameIsValid] = useState(false);
+    const [usernameIsTouched, setUsernameIsTouched] = useState(false);
 
     const validateUsername = (username: string) => {
         setUsernameIsValid (username.replace(/\s*/, '') ? true : false);
@@ -23,10 +24,14 @@ function CreateGamePage ({ createGame }: PropsFromRedux) {
     const setAndValidateUsername = (value: string) => {
         setUsername(value);
         validateUsername(value);
+        setUsernameIsTouched(true);
     }
     
     const submit = () => {
-        createGame(username, playersForStart);
+        setUsernameIsTouched(true);
+        if (playersForStartIsValid && usernameIsValid) {
+            createGame(username, playersForStart);
+        }
     }
 
     return (
@@ -54,8 +59,8 @@ function CreateGamePage ({ createGame }: PropsFromRedux) {
                 errorMessage="Обязательное поле"
                 value={username}
                 onInput={(e) => setAndValidateUsername(e.target.value)}
-                errorMessageForce={!usernameIsValid}
-                onBlur={() => validateUsername(username)}
+                errorMessageForce={!usernameIsValid && usernameIsTouched}
+                onBlur={() => setUsernameIsTouched(true)}
                 />
             </List>
             <List>
