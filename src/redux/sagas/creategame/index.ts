@@ -3,7 +3,9 @@ import { ICreateGame } from './types';
 import { takeLatest, call, put } from 'redux-saga/effects';
 import { remoteConfig } from 'utils/firebase';
 import { addAppError } from 'redux/reducers/errors/actions';
+import { loadingOn, loadingOff } from 'redux/reducers/loading/actions';
 import { joinGame } from 'redux/sagas/joingame/actions';
+import { navigate } from 'utils/router';
 import * as DB from 'database';
 
 
@@ -21,9 +23,12 @@ function* createGame({username, playersForStart}: ICreateGame) {
   };
 
   try {
-    const createdGame = yield call(DB.createGame, game);
-    yield put( joinGame(createdGame.id, username) );
+    const { id: gameId } = yield call(DB.createGame, game);
+    yield put ( loadingOn() );
+    yield put( joinGame(gameId, username) );
+    yield call ( navigate, `/join/${gameId}` )
   } catch (e) {
+    yield put ( loadingOff() );
     yield put( addAppError(e) );
   }
 }
