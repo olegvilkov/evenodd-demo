@@ -17,7 +17,7 @@ import * as DB from 'database';
 function* createGame({username, playersForStart}: ICreateGame) {
   const game = {
     playersForStart,
-    name: `Создатель: ${username}`,
+    name: `Создатель игры: ${username}`,
     roundsForWin: remoteConfig.getNumber('K'),
     playersCount: 0,
   };
