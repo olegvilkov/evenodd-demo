@@ -22,7 +22,6 @@ function* createGame({username, playersForStart}: ICreateGame) {
 
   try {
     const createdGame = yield call(DB.createGame, game);
-    yield joinGame(createdGame.id, username);
     yield put( joinGame(createdGame.id, username) );
   } catch (e) {
     yield put( addAppError(e) );
