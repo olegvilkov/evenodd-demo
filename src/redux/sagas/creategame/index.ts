@@ -20,7 +20,7 @@ function* createGame({username, playersForStart}: ICreateGame) {
     playersForStart,
     name: `Создатель: ${username}`,
     roundsForWin: remoteConfig.getNumber('K'),
-    playersCount: 1,
+    playersCount: 0,
   };
 
   try {
