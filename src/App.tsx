@@ -4,6 +4,7 @@ import { Provider } from 'react-redux';
 
 import { App, View } from 'framework7-react';
 import ErrorsHandler from 'components/ErrorsHandler';
+import LoadingIndicator from 'components/LoadingIndicator';
 
 // specify routes for app
 import routes from './routes';
@@ -23,7 +24,8 @@ export default () => (
     <App params={f7params}>
       {/* initial page is specified in routes.js */}
       <View main url="/" />
-      <ErrorsHandler/>
+      <ErrorsHandler />
+      <LoadingIndicator />
     </App>
   </Provider>
 )
