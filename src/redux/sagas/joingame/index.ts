@@ -1,6 +1,7 @@
 import { JOIN_GAME } from 'redux/actionTypes';
 import { IJoinGame } from './types';
 import { addAppError } from 'redux/reducers/errors/actions';
+import { navigate } from 'utils/router';
 import { call, put, takeLatest } from 'redux-saga/effects';
 import * as DB from 'database';
 
@@ -16,6 +17,7 @@ function* joinGame({gameId, username}: IJoinGame) {
   };
   try {
     yield call(DB.addPlayerToGame, gameId, player);
+    yield call(navigate, `/game/${gameId}`);
   } catch (e) {
     yield put( addAppError(e.message) );
   }  
