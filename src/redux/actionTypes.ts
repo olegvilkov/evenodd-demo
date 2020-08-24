@@ -17,6 +17,7 @@ export const CREATE_GAME_FAILED = 'CREATE_GAME_FAILED';
 export const GAME_SUBSCRIBE = 'GAME_SUBSCRIBE';
 export const GAME_UNSUBSCRIBE = 'GAME_UNSUBSCRIBE';
 export const GAME_UPDATE = 'GAME_UPDATE';
+export const GAME_CLEAR = 'GAME_CLEAR';
 export const GAME_WAIT_TURN = 'GAME_WAIT_TURN';
 export const GAME_MOVE = 'GAME_MOVE';
 export const GAME_FINISH = 'GAME_FINISH';

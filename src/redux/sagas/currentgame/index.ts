@@ -5,7 +5,7 @@ import { eventChannel, EventChannel } from 'redux-saga';
 import { ISubscribeToGame } from './types';
 import * as DB from 'database';
 import { selectCurrentGame } from 'redux/reducers/currentgame/selector';
-import { updateCurrentGame } from 'redux/reducers/currentgame/actions';
+import { updateCurrentGame, clearCurrentGame } from 'redux/reducers/currentgame/actions';
 
 let currentGameChannel: EventChannel<unknown> | null = null;
 
@@ -24,7 +24,7 @@ function* subscribeToGame({gameId}: ISubscribeToGame) {
 
   try {
     currentGameChannel = eventChannel(emit => {
-      // return unsubscribe
+      // returns unsubscribe
       return DB.subcribeToGame( gameId, emit );
     });
 
@@ -44,6 +44,7 @@ function* subscribeToGame({gameId}: ISubscribeToGame) {
 function* unSubscribeFromGame() {
   if (currentGameChannel) {
     currentGameChannel.close();
+    yield put ( clearCurrentGame() );
   }
 }
 

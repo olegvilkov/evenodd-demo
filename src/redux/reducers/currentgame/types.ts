@@ -1,5 +1,5 @@
 
-import { GAME_UPDATE } from 'redux/actionTypes';
+import { GAME_UPDATE, GAME_CLEAR } from 'redux/actionTypes';
 
 export interface IGame {
     id?: string
@@ -10,11 +10,17 @@ export interface IGame {
     winner?: string
 }
 
-export interface IGameActionType {
+export interface IGameUpdate {
     type: typeof GAME_UPDATE
     payload: IGame
+}
+
+export interface IGameClear {
+    type: typeof GAME_CLEAR
 }
 
 export interface IGameState {
     currentgame: IGame
 }
+
+export type GameActionType = IGameUpdate | IGameClear;
