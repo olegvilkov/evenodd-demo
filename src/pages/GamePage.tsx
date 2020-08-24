@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { f7, f7ready } from 'framework7-react';
 import { Page, Navbar } from 'framework7-react';
 import ScoreList from 'components/ScoreList';
-import GameMove from 'components/GameMove';
+import Answer from 'components/Answer';
 
 interface Props {
     winner: string,
@@ -63,7 +63,7 @@ export default function GamePage ({winner, waitTurn}: Props) {
     return (
        <Page loginScreen>
         <Navbar title="Game 1"/>
-        <GameMove />
+        <Answer />
         <ScoreList />
        </Page>
     )
