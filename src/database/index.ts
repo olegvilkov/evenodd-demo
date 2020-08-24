@@ -6,8 +6,6 @@ import { ChangeGameCallbackType } from 'redux/sagas/currentgame/types';
 
 const increseByOne = dbHelper.FieldValue.increment(1);
 
-let detachGamesCollectionListener: (()=>void) | null = null;
-
 export function createGame (game: IGame) {
   return db.collection("games").add(game);
 }
