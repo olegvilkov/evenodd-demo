@@ -3,7 +3,7 @@ import { IGame } from 'redux/reducers/currentgame/types';
 import { ChangeGamesListType } from 'redux/sagas/gameslist/types';
 import { ChangeGameCallbackType } from 'redux/sagas/currentgame/types';
 
-export function createGame (game: IGame) {
+export function addGame (game: IGame) {
     return db.collection("games").add(game);
 }
 
@@ -11,7 +11,7 @@ export function createGame (game: IGame) {
  * Listen games collection for realtime updates
  * @returns unsubscribe
  */
-export function subcribeToGamesList ( callbackfn: ChangeGamesListType ) {
+export function listenGamesCollection ( callbackfn: ChangeGamesListType ) {
     return db.collection("games")
         .onSnapshot(function(snapshot) {
             snapshot.docChanges().forEach(function(change) {
@@ -28,7 +28,7 @@ export function subcribeToGamesList ( callbackfn: ChangeGamesListType ) {
  * Listen game doc for realtime updates
  * @returns unsubscribe
  */
-export function subcribeToGame ( gameId: string, callbackfn: ChangeGameCallbackType ) {
+export function listenGamesDoc ( gameId: string, callbackfn: ChangeGameCallbackType ) {
     return db.doc(`games/${gameId}`)
       .onSnapshot(function(doc) {
         const id = doc.id;

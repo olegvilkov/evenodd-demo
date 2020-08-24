@@ -20,7 +20,7 @@ function* joinGame({gameId, username}: IJoinGame) {
   try {
     yield put( loadingOn() );
     yield put( setUserName(username) );
-    yield call(DB.addPlayerToGame, gameId, player);
+    yield call(DB.addGamePlayer, gameId, player);
     yield call(navigate, `/game/${gameId}`);
     yield put( loadingOff() );
   } catch (e){

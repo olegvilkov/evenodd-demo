@@ -24,7 +24,7 @@ function* createGame({username, playersForStart}: ICreateGame) {
   };
 
   try {
-    const { id: gameId } = yield call(DB.createGame, game);
+    const { id: gameId } = yield call(DB.addGame, game);
     yield put ( loadingOn() );
     yield put( setUserName(username) );
     try {

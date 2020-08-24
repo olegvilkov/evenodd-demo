@@ -3,7 +3,7 @@ import { IPlayer } from 'redux/reducers/players/types';
 
 const increseByOne = dbHelper.FieldValue.increment(1);
 
-export function addPlayerToGame (gameId: string, player: IPlayer) {
+export function addGamePlayer (gameId: string, player: IPlayer) {
     const gameDocRef = db.doc(`games/${gameId}`);
   
     return db.runTransaction(function(transaction) {

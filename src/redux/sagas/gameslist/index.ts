@@ -14,7 +14,7 @@ function* subscribeToGamesList() {
   try {
     gamesListChannel = eventChannel(emit => {
       // return unsubscribe
-      return DB.subcribeToGamesList( emit );
+      return DB.listenGamesCollection( emit );
     });
 
     while (true) {
