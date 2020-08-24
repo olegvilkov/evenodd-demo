@@ -5,9 +5,9 @@ export interface IGamesListenerAction {
     type: typeof GAMES_LIST_SUBSCRIBE | typeof GAMES_LIST_UNSUBSCRIBE
 }
 
-export interface GamesListActionType {
+export interface IGamesListAction {
     type: string
     payload: IGame
 }
 
-export type ChangeGamesListType = (action: GamesListActionType) => void;
+export type ChangeGamesListType = (action: IGamesListAction) => void;
