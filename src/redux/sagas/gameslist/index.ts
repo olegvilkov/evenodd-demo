@@ -12,8 +12,6 @@ let gamesListChannel: EventChannel<unknown> | null = null;
  */
 function* subscribeToGamesList() {
   try {
-    // const unsubscibe = yield call(DB.subcribeToGamesList, onGamesListChanged);
-
     gamesListChannel = eventChannel(emit => {
       // return unsubscribe
       return DB.subcribeToGamesList( emit );
