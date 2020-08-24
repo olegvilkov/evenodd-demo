@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import { connect, ConnectedProps } from 'react-redux';
 import { selectGamesList } from 'redux/reducers/gameslist/selector';
 import { IGamesListState } from 'redux/reducers/gameslist/types';
-import { subcribeToGamesList, unSubcribeToGamesList } from 'redux/sagas/gameslist/actions';
+import { subscribeToGamesList, unSubscribeToGamesList } from 'redux/sagas/gameslist/actions';
 
 import { Page, Toolbar, Link, List, ListItem, Navbar } from 'framework7-react';
 
@@ -10,7 +10,7 @@ const mapState = (state: IGamesListState) => ({
     games: selectGamesList(state)
 });
 
-const connector = connect(mapState, { subcribeToGamesList, unSubcribeToGamesList });
+const connector = connect(mapState, { subscribeToGamesList, unSubscribeToGamesList });
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
 /**
@@ -19,11 +19,11 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
  * Содержит список текущих игр
  * @todo Завершенные игры
  */
-function GamesListPage ({ games=[], subcribeToGamesList, unSubcribeToGamesList }: PropsFromRedux) {
+function GamesListPage ({ games=[], subscribeToGamesList, unSubscribeToGamesList }: PropsFromRedux) {
 
     useEffect(() => {
-        subcribeToGamesList();
-        return ()=>{ unSubcribeToGamesList() }
+        subscribeToGamesList();
+        return ()=>{ unSubscribeToGamesList() }
     }, []);
 
     return (

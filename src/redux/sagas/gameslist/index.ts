@@ -10,7 +10,7 @@ let gamesListChannel: EventChannel<unknown> | null = null;
 /**
  * saga which start listen changes ln list of games
  */
-function* subcribeToGamesList() {
+function* subscribeToGamesList() {
   try {
     // const unsubscibe = yield call(DB.subcribeToGamesList, onGamesListChanged);
 
@@ -44,13 +44,13 @@ function* subcribeToGamesList() {
 /**
  * saga which stop listen changes ln list of games
  */
-function* unSubcribeToGamesList() {
+function* unSubscribeToGamesList() {
   if (gamesListChannel) {
     gamesListChannel.close();
   }
 }
 
 export const gamesListSagas = [
-  takeLatest(GAMES_LIST_SUBSCRIBE, subcribeToGamesList),
-  takeLatest(GAMES_LIST_UNSUBSCRIBE, unSubcribeToGamesList),
+  takeLatest(GAMES_LIST_SUBSCRIBE, subscribeToGamesList),
+  takeLatest(GAMES_LIST_UNSUBSCRIBE, unSubscribeToGamesList),
 ];
