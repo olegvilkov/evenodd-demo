@@ -1,14 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { IGameState } from 'redux/reducers/currentgame/types';
 import { connect, ConnectedProps } from 'react-redux';
 import { subscribeToGame, unSubscribeFromGame } from 'redux/sagas/currentgame/actions';
+import { selectCurrentGameName } from 'redux/reducers/currentgame/selector';
+import { selectUserName } from 'redux/reducers/user/selector';
+import { IGameState } from 'redux/reducers/currentgame/types';
+import { IUserState } from 'redux/reducers/user/types';
 
 import { f7 } from 'framework7-react';
 import { Page, List, Navbar, ListInput, ListButton } from 'framework7-react';
-import { selectCurrentGameName } from 'redux/reducers/currentgame/selector';
 
-const mapState = (state: IGameState) => ({
-    currentUsername: '', // selectUserName(state),
+const mapState = (state: IGameState & IUserState) => ({
+    currentUsername: selectUserName(state),
     gameName: selectCurrentGameName(state),
 });
 

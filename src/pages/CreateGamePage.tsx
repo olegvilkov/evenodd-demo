@@ -1,24 +1,31 @@
 import React, { useState } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import { createGame } from 'redux/sagas/creategame/actions';
+import { selectUserName } from 'redux/reducers/user/selector';
+import { IUserState } from 'redux/reducers/user/types';
 
 import { Page, List, Navbar, ListInput, ListButton } from 'framework7-react';
 
-const connector = connect(null, { createGame });
+const mapState = (state: IUserState) => ({
+    currentUsername: selectUserName(state),
+});
+
+const connector = connect(mapState, { createGame });
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
 /**
  * Экран "Создать игру"
  */
-function CreateGamePage ({ createGame }: PropsFromRedux) {
+function CreateGamePage ({ currentUsername, createGame }: PropsFromRedux) {
+    const isEmpty = (str: string) => str.replace(/\s*/, '') ? true : false;
     const [playersForStart, setPlayersForStart] = useState(2);
     const [playersForStartIsValid, setPlayersForStartIsValid] = useState(true);
-    const [username, setUsername] = useState('');
-    const [usernameIsValid, setUsernameIsValid] = useState(false);
+    const [username, setUsername] = useState(currentUsername);
+    const [usernameIsValid, setUsernameIsValid] = useState( isEmpty(currentUsername) );
     const [usernameIsTouched, setUsernameIsTouched] = useState(false);
 
     const validateUsername = (username: string) => {
-        setUsernameIsValid (username.replace(/\s*/, '') ? true : false);
+        setUsernameIsValid ( isEmpty(username) );
     }
 
     const setAndValidateUsername = (value: string) => {

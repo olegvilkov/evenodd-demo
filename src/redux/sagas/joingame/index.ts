@@ -1,6 +1,7 @@
 import { JOIN_GAME } from 'redux/actionTypes';
 import { IJoinGame } from './types';
 import { addAppError } from 'redux/reducers/errors/actions';
+import { setUserName } from 'redux/reducers/user/actions';
 import { navigate } from 'utils/router';
 import { loadingOn, loadingOff } from 'redux/reducers/loading/actions';
 import { call, put, takeLatest } from 'redux-saga/effects';
@@ -17,14 +18,15 @@ function* joinGame({gameId, username}: IJoinGame) {
     points: 0,
   };
   try {
-    yield put ( loadingOn() );
+    yield put( loadingOn() );
+    yield put( setUserName(username) );
     yield call(DB.addPlayerToGame, gameId, player);
     yield call(navigate, `/game/${gameId}`);
-    yield put ( loadingOff() );
-  } catch (e) {
-    yield put ( loadingOff() );
+    yield put( loadingOff() );
+  } catch (e){
+    yield put( loadingOff() );
     yield put( addAppError(e.message) );
-  }  
+  }
 }
 
 export const joinGameSagas = [

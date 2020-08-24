@@ -29,3 +29,5 @@ export const APP_DELETE_ERRORS = 'APP_DELETE_ERRORS';
 
 export const APP_LOADING_ON = 'APP_LOADING_ON';
 export const APP_LOADING_OFF = 'APP_LOADING_OFF';
+
+export const USER_SET_NAME = 'USER_SET_NAME';
