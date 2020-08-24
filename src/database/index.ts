@@ -1,7 +1,8 @@
 import { db, dbHelper } from 'utils/firebase';
-import { IGame } from 'redux/reducers/game/types';
+import { IGame } from 'redux/reducers/currentgame/types';
 import { IPlayer } from 'redux/reducers/players/types';
 import { ChangeGamesListType } from 'redux/sagas/gameslist/types';
+import { ChangeGameCallbackType } from 'redux/sagas/currentgame/types';
 
 const increseByOne = dbHelper.FieldValue.increment(1);
 
@@ -33,9 +34,10 @@ export function addPlayerToGame (gameId: string, player: IPlayer) {
 
 /**
  * Listen games collection for realtime updates
+ * @returns unsubscribe
  */
 export function subcribeToGamesList ( callbackfn: ChangeGamesListType ) {
-  const unsubscribe = db.collection("games")
+  return db.collection("games")
     .onSnapshot(function(snapshot) {
         snapshot.docChanges().forEach(function(change) {
           const id = change.doc.id;
@@ -45,16 +47,18 @@ export function subcribeToGamesList ( callbackfn: ChangeGamesListType ) {
           callbackfn({type, payload});
         });
     });
-  return unsubscribe;
 }
 
 /**
- * Detach a games collection listener for realtime updates
+ * Listen game doc for realtime updates
+ * @returns unsubscribe
  */
-// export function unSubcribeToGamesList () {
-//   if (detachGamesCollectionListener) {
-//     const result = detachGamesCollectionListener();
-//     detachGamesCollectionListener = null;
-//     return result;
-//   }  
-// }
+export function subcribeToGame ( gameId: string, callbackfn: ChangeGameCallbackType ) {
+  return db.doc(`games/${gameId}`)
+    .onSnapshot(function(doc) {
+      const id = doc.id;
+      const data = doc.data();
+      const payload = {...data, id} as IGame;
+      callbackfn(payload);
+    });
+}

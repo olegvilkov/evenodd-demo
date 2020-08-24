@@ -1,5 +1,5 @@
 import { GAMES_LIST_CHANGE_GAME, GAMES_LIST_ADD_GAME, GAMES_LIST_DELETE_GAME } from 'redux/actionTypes';
-import { IGame } from './../game/types';
+import { IGame } from '../currentgame/types';
 
 export type IGameList = Array<IGame>;
 

@@ -10,11 +10,11 @@ export default [
       component: GamesListPage,
     },
     {
-      path: '/game/:gameid',
+      path: '/game/:gameId',
       component: GamePage,
     },
     {
-      path: '/join/:gameid',
+      path: '/join/:gameId',
       component: JoinGamePage,
     },
     {
