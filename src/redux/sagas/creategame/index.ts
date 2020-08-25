@@ -26,7 +26,7 @@ function* createGame({username, playersForStart}: ICreateGame) {
 
   try {
     yield put ( loadingOn() );
-    const { id: gameId } = yield call(DB.addGameAndWithPlayer, game, player);
+    const { id: gameId } = yield call(DB.addGameWithPlayer, game, player);
     yield put( setUserName(username) );
     yield call(navigate, `/game/${gameId}`);
     yield put ( loadingOff() );
