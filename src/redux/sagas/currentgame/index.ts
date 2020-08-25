@@ -51,9 +51,10 @@ function* unSubscribeFromGame() {
 }
 
 /**
- * Saga wich save user answer
- * and increase player points if answer correct
- * and finish player turn
+ * Saga wich save user answer.
+ * Increase player points if answer correct
+ * and finish player turn.
+ * @param param0 
  */
 function* makeAnswer({evenodd, number}: IMakeAnswer) {
   const {gameId} = yield select( selectCurrentGame );
@@ -63,18 +64,20 @@ function* makeAnswer({evenodd, number}: IMakeAnswer) {
   
   yield call(DB.setGameAnswerEvenOdd, gameId, evenodd);
 
-  // In case if gameanswer wait for number write
-  // Try this part not depend from setAnaswerEvenOdd success
   try {
+    
     yield call(DB.runGameAnswerTransaction, gameId, (transaction, answerDoc) => {
       const prevNumber = (answerDoc as IMakeAnswer).number;
       const isAnswerCorrect = prevNumber % 2 && evenodd == DB.EvenOdd.Odd;
+
       if (isAnswerCorrect) {
         DB.increaseGamePlayerPoints(gameId, playerId, transaction);
       }
+
       DB.updateGameAnswerNumber(gameId, number, transaction);
       DB.increasePlayerRound(gameId, playerId, transaction);
     });
+
   } catch (e) {
     yield put( addAppError(e) );
   }
