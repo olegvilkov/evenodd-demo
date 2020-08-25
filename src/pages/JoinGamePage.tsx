@@ -20,6 +20,7 @@ type PropsFromNavigation = {gameId: string};
 
 /**
  * Экран "Присоединиться к игре"
+ * @todo Добавить логику если игра заполнилась до вступления игрока
  */
 function JoinGamePage ({ currentUsername='', game, gameId='', subscribeToGame, unSubscribeFromGame }: PropsFromRedux & PropsFromNavigation) {
 
