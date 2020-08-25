@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import { subscribeToGame, unSubscribeFromGame } from 'redux/sagas/currentgame/actions';
-import { selectCurrentGameName } from 'redux/reducers/currentgame/selector';
+import { selectCurrentGame } from 'redux/reducers/currentgame/selector';
 import { selectUserName } from 'redux/reducers/user/selector';
 import { IGameState } from 'redux/reducers/currentgame/types';
 import { IUserState } from 'redux/reducers/user/types';
@@ -11,7 +11,7 @@ import { Page, List, Navbar, ListInput, ListButton } from 'framework7-react';
 
 const mapState = (state: IGameState & IUserState) => ({
     currentUsername: selectUserName(state),
-    gameName: selectCurrentGameName(state),
+    game: selectCurrentGame(state),
 });
 
 const connector = connect(mapState, { subscribeToGame, unSubscribeFromGame });
@@ -21,7 +21,7 @@ type PropsFromNavigation = {gameId: string};
 /**
  * Экран "Присоединиться к игре"
  */
-function JoinGamePage ({ currentUsername='', gameName='', gameId='', subscribeToGame, unSubscribeFromGame }: PropsFromRedux & PropsFromNavigation) {
+function JoinGamePage ({ currentUsername='', game, gameId='', subscribeToGame, unSubscribeFromGame }: PropsFromRedux & PropsFromNavigation) {
 
     useEffect(() => {
         subscribeToGame( gameId );
@@ -30,9 +30,15 @@ function JoinGamePage ({ currentUsername='', gameName='', gameId='', subscribeTo
 
     const [username, setUsername] = useState(currentUsername);
 
+    const subtitle = game ? `${game.name} (${game.playersCount}/${game.playersForStart})` : '';
+
     return (
         <Page loginScreen>
-            <Navbar title="Присоединиться к игре" subtitle={gameName} backLink={true}/>
+            <Navbar
+                title="Присоединиться к игре"
+                subtitle={subtitle}
+                backLink={true}
+            />
             <List form>
                 <ListInput
                 label="Имя"
