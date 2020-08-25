@@ -2,9 +2,25 @@ import { db } from 'utils/firebase';
 import { IGame } from 'redux/reducers/currentgame/types';
 import { ChangeGamesListType } from 'redux/sagas/gameslist/types';
 import { ChangeGameCallbackType } from 'redux/sagas/currentgame/types';
+import { IPlayer } from 'redux/reducers/players/types';
+import { transactionAddGamePlayer } from './players';
 
-export function addGame (game: IGame) {
-    return db.collection("games").add(game);
+/**
+ * Add game and add player in this game
+ * @param game 
+ */
+export function addGameAndWithPlayer (game: IGame, player: IPlayer) {
+    const gameDocRef = db.collection("games").doc();
+
+    return db.runTransaction(function(transaction) {
+        // This code may get re-run multiple times if there are conflicts.
+        return transaction.get(gameDocRef)
+            .then(function(gameDoc) {
+                transaction.set(gameDocRef, game);
+                transactionAddGamePlayer(transaction, gameDocRef, player);
+                return gameDoc;
+            });
+    });
 }
 
 /**

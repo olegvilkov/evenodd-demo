@@ -8,15 +8,22 @@ import { call, put, takeLatest } from 'redux-saga/effects';
 import * as DB from 'database';
 
 /**
+ * Prepare and return player data for add in game players
+ * @param username 
+ */
+export const playerData = (username: string) => ({
+  name: username,
+  order: 0,
+  points: 0,
+  round: 0,
+});
+
+/**
  * saga which add user to game
  * and if failed then dispatch error
  */
 function* joinGame({gameId, username}: IJoinGame) {
-  const player = {
-    name: username,
-    order: 0,
-    points: 0,
-  };
+  const player = playerData(username);
   try {
     yield put( loadingOn() );
     yield put( setUserName(username) );

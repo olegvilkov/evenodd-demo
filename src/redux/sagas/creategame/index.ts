@@ -5,10 +5,9 @@ import { remoteConfig } from 'utils/firebase';
 import { addAppError } from 'redux/reducers/errors/actions';
 import { setUserName } from 'redux/reducers/user/actions';
 import { loadingOn, loadingOff } from 'redux/reducers/loading/actions';
-import { joinGame } from 'redux/sagas/joingame/actions';
+import { playerData } from '../joingame';
 import { navigate } from 'utils/router';
 import * as DB from 'database';
-
 
 /**
  * saga which create game in db
@@ -23,15 +22,14 @@ function* createGame({username, playersForStart}: ICreateGame) {
     playersCount: 0,
   };
 
+  const player = playerData(username);
+
   try {
-    const { id: gameId } = yield call(DB.addGame, game);
     yield put ( loadingOn() );
+    const { id: gameId } = yield call(DB.addGameAndWithPlayer, game, player);
     yield put( setUserName(username) );
-    try {
-      yield put( joinGame(gameId, username) );
-    } catch (e) {
-      yield call ( navigate, `/join/${gameId}` );
-    }
+    yield call(navigate, `/game/${gameId}`);
+    yield put ( loadingOff() );
   } catch (e) {
     yield put ( loadingOff() );
     yield put( addAppError(e) );
