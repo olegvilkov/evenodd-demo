@@ -16,7 +16,7 @@ export function addGamePlayer (gameId: string, player: IPlayer) {
       // This code may get re-run multiple times if there are conflicts.
       return transaction.get(gameDocRef)
         .then(() => {
-            transactionAddGamePlayer(transaction, gameDocRef, player);
+            addGamePlayerInTransaction(transaction, gameDocRef, player);
         })
     });
   }
@@ -28,7 +28,7 @@ export function addGamePlayer (gameId: string, player: IPlayer) {
  * @param gameDocRef 
  * @param player 
  */
-export function transactionAddGamePlayer (
+export function addGamePlayerInTransaction (
     transaction: firebase.firestore.Transaction,
     gameDocRef: firebase.firestore.DocumentReference,
     player: IPlayer

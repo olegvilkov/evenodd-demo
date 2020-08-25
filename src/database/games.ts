@@ -3,7 +3,7 @@ import { IGame } from 'redux/reducers/currentgame/types';
 import { ChangeGamesListType } from 'redux/sagas/gameslist/types';
 import { ChangeGameCallbackType } from 'redux/sagas/currentgame/types';
 import { IPlayer } from 'redux/reducers/players/types';
-import { transactionAddGamePlayer } from './players';
+import { addGamePlayerInTransaction } from './players';
 
 /**
  * Add game and add player in this game
@@ -17,7 +17,7 @@ export function addGameWithPlayer (game: IGame, player: IPlayer) {
         return transaction.get(gameDocRef)
             .then(function(gameDoc) {
                 transaction.set(gameDocRef, game);
-                transactionAddGamePlayer(transaction, gameDocRef, player);
+                addGamePlayerInTransaction(transaction, gameDocRef, player);
                 return gameDoc;
             });
     });
