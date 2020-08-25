@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { EvenOdd } from 'database/enums';
+import { EvenOdd } from 'database/gameanswer';
 
 import { BlockHeader, Block, Button, List, ListItem, Stepper } from 'framework7-react';
 

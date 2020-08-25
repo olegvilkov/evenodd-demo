@@ -8,5 +8,10 @@ import { currentGameSagas } from './currentgame';
  * root saga
  */
 export default function* sagas() {
-  yield all([...createGameSagas, ...joinGameSagas, ...gamesListSagas, ...currentGameSagas]);
+  yield all([
+    ...createGameSagas,
+    ...joinGameSagas,
+    ...gamesListSagas,
+    ...currentGameSagas
+  ]);
 }

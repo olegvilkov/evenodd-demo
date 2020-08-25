@@ -1,42 +1,62 @@
 import { db, dbHelper } from 'utils/firebase';
-import { EvenOdd, AnswerMode } from './enums';
-import { IGameAnswer } from 'redux/sagas/gameanswer/types';
+
+export enum EvenOdd {
+    Even,
+    Odd
+}
+
+export enum AnswerMode {
+    WaitForEvenOdd,
+    WaitForNumber,
+    Finish
+}
+
+export interface InsideTransaction {
+    (transaction: firebase.firestore.Transaction, doc: firebase.firestore.DocumentData | undefined): void
+}
 
 const increseByOne = dbHelper.FieldValue.increment(1);
 
-export function setAnswerEvenOdd (gameId: string, evenodd: EvenOdd) {
+export function setGameAnswerEvenOdd (gameId: string, evenodd: EvenOdd) {
     return db.doc(`gameanswers/${gameId}`).set({
-        evenodd,
+        evenodd: evenodd,
         mode: AnswerMode.WaitForNumber,
-    });
+    }, {merge: true});
 }
 
-export function setAnswerNumber (gameId: string, playerId: string, number: number) {
+export function runGameAnswerTransaction (
+    gameId: string,
+    insideTransaction: InsideTransaction
+) {
     const answerDocRef = db.doc(`gameanswers/${gameId}`);
-    const playerDocRef = db.doc(`games/${gameId}/${playerId}`);
   
     return db.runTransaction(function(transaction) {
       // This code may get re-run multiple times if there are conflicts.
       return transaction.get(answerDocRef)
         .then(function(answerDoc) {
-  
-          transaction.update(answerDocRef, {
-            number,
-            mode: AnswerMode.WaitForEvenOdd,
-          });
-  
-          transaction.update(playerDocRef, {
-            round: increseByOne
-          });
-          
-          return answerDoc;
-      });
+            insideTransaction(transaction, answerDoc.data())
+        })
     });
 }
 
-export function getAnswerNumber (gameId: string, number: number) {
-    return db.doc(`gameanswers/${gameId}`).get().then(function(doc) {
-        const data = doc.data() as IGameAnswer;
-        return data.number;
-    })
+export function increaseGamePlayerPoints (gameId: string, playerId: string, transaction: firebase.firestore.Transaction) {
+    const playerDocRef = db.doc(`games/${gameId}/${playerId}`);
+    transaction.update(playerDocRef, {
+        points: increseByOne
+    });
+}
+
+export function updateGameAnswerNumber (gameId: string, number: number, transaction: firebase.firestore.Transaction) {
+    const answerDocRef = db.doc(`gameanswers/${gameId}`);
+    transaction.update(answerDocRef, {
+        number,
+        mode: AnswerMode.WaitForEvenOdd,
+    });
+}
+
+export function increasePlayerRound (gameId: string, playerId: string, transaction: firebase.firestore.Transaction) {
+    const playerDocRef = db.doc(`games/${gameId}/${playerId}`);
+    transaction.update(playerDocRef, {
+        round: increseByOne
+    });
 }
