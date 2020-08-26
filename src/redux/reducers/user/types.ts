@@ -1,8 +1,8 @@
 
-import { USER_SET_NAME } from 'redux/actionTypes';
+import { USER_UPDATE_PROFILE_SUCCESS } from 'redux/actionTypes';
 
 export interface IUser {
-    id?: string
+    uid: string
     name: string
 }
 
@@ -11,8 +11,8 @@ export interface IUserState {
 }
 
 export interface IUserSetName {
-    type: typeof USER_SET_NAME
-    payload: string
+    type: typeof USER_UPDATE_PROFILE_SUCCESS
+    payload: firebase.User
 }
 
 export type UserActionType = IUserSetName;

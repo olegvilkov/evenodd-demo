@@ -3,6 +3,7 @@ import { createGameSagas } from './creategame';
 import { joinGameSagas } from './joingame';
 import { gamesListSagas } from './gameslist';
 import { currentGameSagas } from './currentgame';
+import { userSagas } from './user';
 
 /**
  * root saga
@@ -12,6 +13,7 @@ export default function* sagas() {
     ...createGameSagas,
     ...joinGameSagas,
     ...gamesListSagas,
-    ...currentGameSagas
+    ...currentGameSagas,
+    ...userSagas,
   ]);
 }

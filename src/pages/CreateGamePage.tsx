@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import { createGame } from 'redux/sagas/creategame/actions';
 import { selectUserName } from 'redux/reducers/user/selector';
@@ -23,6 +23,8 @@ function CreateGamePage ({ currentUsername, createGame }: PropsFromRedux) {
     const [username, setUsername] = useState(currentUsername);
     const [usernameIsValid, setUsernameIsValid] = useState( isEmpty(currentUsername) );
     const [usernameIsTouched, setUsernameIsTouched] = useState(false);
+
+    useEffect(()=>{ setUsername(currentUsername) }, [currentUsername])
 
     const validateUsername = (username: string) => {
         setUsernameIsValid ( isEmpty(username) );

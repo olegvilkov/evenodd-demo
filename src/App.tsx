@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import store from './redux/store'
 import { Provider } from 'react-redux';
 
 import { App, View } from 'framework7-react';
 import ErrorsHandler from 'components/ErrorsHandler';
 import LoadingIndicator from 'components/LoadingIndicator';
+import Auth from 'components/Auth';
 
 // specify routes for app
 import routes from './routes';
@@ -19,13 +20,16 @@ const f7params = {
   routes,
 };
 
-export default () => (
-  <Provider store={store}>
-    <App params={f7params}>
-      {/* initial page is specified in routes.js */}
-      <View main url="/" />
-      <ErrorsHandler />
-      <LoadingIndicator />
-    </App>
-  </Provider>
-)
+export default () => {
+  return (
+    <Provider store={store}>
+      <App params={f7params}>
+        {/* initial page is specified in routes.js */}
+        <View main url="/" />
+        <ErrorsHandler />
+        <LoadingIndicator />
+        <Auth />
+      </App>
+    </Provider>
+  )
+}

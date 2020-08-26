@@ -1,7 +1,7 @@
 import { JOIN_GAME } from 'redux/actionTypes';
 import { IJoinGame } from './types';
 import { addAppError } from 'redux/reducers/errors/actions';
-import { setUserName } from 'redux/reducers/user/actions';
+import { updateUserProfile } from 'redux/sagas/user/actions';
 import { navigate } from 'utils/router';
 import { loadingOn, loadingOff } from 'redux/reducers/loading/actions';
 import { call, put, takeLatest } from 'redux-saga/effects';
@@ -26,7 +26,7 @@ function* joinGame({gameId, username}: IJoinGame) {
   const player = playerData(username);
   try {
     yield put( loadingOn() );
-    yield put( setUserName(username) );
+    yield put( updateUserProfile({displayName: username}) );
     yield call(DB.addGamePlayer, gameId, player);
     yield call(navigate, `/game/${gameId}`);
     yield put( loadingOff() );
