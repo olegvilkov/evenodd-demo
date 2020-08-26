@@ -70,12 +70,13 @@ function* makeAnswer({evenodd, number}: IMakeAnswer) {
       const prevNumber = (answerDoc as IMakeAnswer).number;
       const isAnswerCorrect = prevNumber % 2 && evenodd == DB.EvenOdd.Odd;
 
-      if (isAnswerCorrect) {
+      DB.increaseGamePlayerPoints(gameId, playerId, transaction);
+      if (prevNumber && isAnswerCorrect) {
         DB.increaseGamePlayerPoints(gameId, playerId, transaction);
       }
 
-      DB.updateGameAnswerNumber(gameId, number, transaction);
-      DB.increasePlayerRound(gameId, playerId, transaction);
+      // DB.updateGameAnswerNumber(gameId, number, transaction);
+      // DB.increasePlayerRound(gameId, playerId, transaction);
     });
 
   } catch (e) {

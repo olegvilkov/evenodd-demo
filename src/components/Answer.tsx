@@ -1,12 +1,17 @@
 import React, { useState } from 'react';
+import { connect, ConnectedProps } from 'react-redux';
+import { makeAnswer } from 'redux/sagas/currentgame/actions';
 import { EvenOdd } from 'database/gameanswer';
 
 import { BlockHeader, Block, Button, List, ListItem, Stepper } from 'framework7-react';
 
+const connector = connect(null, { makeAnswer });
+type PropsFromRedux = ConnectedProps<typeof connector>;
+
 /**
  * Компонент для угадывания чёт-нечет и ввод нового числа с кнопкой «Отправить»
  */
-export default function GameMove () {
+function Answer ({makeAnswer}: PropsFromRedux) {
     const [evenodd, setIsEven] = useState(EvenOdd.Even);
     const [number, setNumber] = useState(0);
 
@@ -19,11 +24,13 @@ export default function GameMove () {
         </List>
         <BlockHeader>Загадайте своё число для следующего игрока</BlockHeader>
         <Block className="text-align-center">
-          <Stepper fill value={number} onStepperChange={(e)=>setNumber(e.target.value)}></Stepper>
+          <Stepper fill value={number} onStepperChange={(value)=>setNumber(value)}></Stepper>
         </Block>
         <Block>
-           <Button fill >Отправить</Button>
+           <Button fill onClick={()=>makeAnswer(evenodd, number)}>Отправить</Button>
         </Block>
         </>
     )
 }
+
+export default connector(Answer)
