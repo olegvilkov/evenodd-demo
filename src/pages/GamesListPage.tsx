@@ -4,7 +4,8 @@ import { selectGamesList } from 'redux/reducers/gameslist/selector';
 import { IGamesListState } from 'redux/reducers/gameslist/types';
 import { subscribeToGamesList, unSubscribeToGamesList } from 'redux/sagas/gameslist/actions';
 
-import { Page, Toolbar, Link, List, ListItem, Navbar } from 'framework7-react';
+import { Page, Toolbar, Link, List, ListItem } from 'framework7-react';
+import GameNavbar from 'components/GameNavbar';
 
 const mapState = (state: IGamesListState) => ({
     games: selectGamesList(state)
@@ -28,7 +29,7 @@ function GamesListPage ({ games=[], subscribeToGamesList, unSubscribeToGamesList
 
     return (
        <Page>
-         <Navbar title="Список игр" />
+         <GameNavbar title="Список игр" />
          <Toolbar bottom>
             <Link></Link>
             <Link href="/create">Создать игру</Link>
