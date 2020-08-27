@@ -9,7 +9,7 @@ import { addGamePlayerInTransaction } from './players';
  * Add game and add player in this game
  * @param game 
  */
-export function addGameWithPlayer (game: IGame, player: IPlayer) {
+export function addGameWithPlayer (game: IGame, playerId: string, player: IPlayer) {
     const gameDocRef = db.collection("games").doc();
 
     return db.runTransaction(function(transaction) {
@@ -17,7 +17,7 @@ export function addGameWithPlayer (game: IGame, player: IPlayer) {
         return transaction.get(gameDocRef)
             .then(function(gameDoc) {
                 transaction.set(gameDocRef, game);
-                addGamePlayerInTransaction(transaction, gameDocRef, player);
+                addGamePlayerInTransaction(gameDocRef, playerId, player, transaction);
                 return gameDoc;
             });
     });

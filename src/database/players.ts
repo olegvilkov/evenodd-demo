@@ -9,14 +9,14 @@ const increseByOne = dbHelper.FieldValue.increment(1);
  * @param gameId 
  * @param player player document
  */
-export function addGamePlayer (gameId: string, player: IPlayer) {
+export function addGamePlayer (gameId: string, playerId: string, player: IPlayer) {
     const gameDocRef = db.doc(`games/${gameId}`);
   
     return db.runTransaction(function(transaction) {
       // This code may get re-run multiple times if there are conflicts.
       return transaction.get(gameDocRef)
         .then(() => {
-            addGamePlayerInTransaction(transaction, gameDocRef, player);
+          addGamePlayerInTransaction(gameDocRef, playerId, player, transaction);
         })
     });
   }
@@ -24,20 +24,22 @@ export function addGamePlayer (gameId: string, player: IPlayer) {
 /**
  * Transaction operation for add player in game
  * Can be called from other transaction opertaions
- * @param transaction 
  * @param gameDocRef 
  * @param player 
+ * @param player 
+ * @param transaction
  */
 export function addGamePlayerInTransaction (
-    transaction: firebase.firestore.Transaction,
     gameDocRef: firebase.firestore.DocumentReference,
-    player: IPlayer
+    playerId: string,
+    player: IPlayer,
+    transaction: firebase.firestore.Transaction,
 ) {
+    const playersDocRef = gameDocRef.collection('players').doc(`${playerId}`);
+
     transaction.update(gameDocRef, {
       playersCount: increseByOne
     })
-
-    const playersDocRef = gameDocRef.collection('players').doc();
 
     return transaction.set(playersDocRef, player);
 }

@@ -1,9 +1,10 @@
 import { CREATE_GAME } from 'redux/actionTypes';
 import { ICreateGame } from './types';
-import { takeLatest, call, put } from 'redux-saga/effects';
+import { takeLatest, call, put, select } from 'redux-saga/effects';
 import { remoteConfig } from 'utils/firebase';
 import { addAppError } from 'redux/reducers/errors/actions';
 import { updateUserProfile } from 'redux/sagas/user/actions';
+import { selectUser } from 'redux/reducers/user/selector';
 import { loadingOn, loadingOff } from 'redux/reducers/loading/actions';
 import { playerData } from '../joingame';
 import { navigate } from 'utils/router';
@@ -23,10 +24,11 @@ function* createGame({username, playersForStart}: ICreateGame) {
   };
 
   const player = playerData(username);
+  const {uid} = yield select( selectUser );
 
   try {
     yield put ( loadingOn() );
-    const { id: gameId } = yield call(DB.addGameWithPlayer, game, player);
+    const { id: gameId } = yield call(DB.addGameWithPlayer, game, uid, player);
     yield put( updateUserProfile({displayName: username}) );
     yield call(navigate, `/game/${gameId}`);
     yield put ( loadingOff() );

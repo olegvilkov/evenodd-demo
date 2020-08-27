@@ -2,9 +2,10 @@ import { JOIN_GAME } from 'redux/actionTypes';
 import { IJoinGame } from './types';
 import { addAppError } from 'redux/reducers/errors/actions';
 import { updateUserProfile } from 'redux/sagas/user/actions';
+import { selectUser } from 'redux/reducers/user/selector';
 import { navigate } from 'utils/router';
 import { loadingOn, loadingOff } from 'redux/reducers/loading/actions';
-import { call, put, takeLatest } from 'redux-saga/effects';
+import { call, put, takeLatest, select } from 'redux-saga/effects';
 import * as DB from 'database';
 
 /**
@@ -24,10 +25,11 @@ export const playerData = (username: string) => ({
  */
 function* joinGame({gameId, username}: IJoinGame) {
   const player = playerData(username);
+  const {uid} = yield select( selectUser );
   try {
     yield put( loadingOn() );
     yield put( updateUserProfile({displayName: username}) );
-    yield call(DB.addGamePlayer, gameId, player);
+    yield call(DB.addGamePlayer, gameId, uid, player);
     yield call(navigate, `/game/${gameId}`);
     yield put( loadingOff() );
   } catch (e){
