@@ -58,7 +58,7 @@ function* unSubscribeFromGame() {
  */
 function* makeAnswer({evenodd, number}: IMakeAnswer) {
   const {gameId} = yield select( selectCurrentGame );
-  const {playerId} = yield select( selectUser );
+  const {uid} = yield select( selectUser );
 
   yield put( loadingOn() );
   
@@ -70,9 +70,9 @@ function* makeAnswer({evenodd, number}: IMakeAnswer) {
       const prevNumber = (answerDoc as IMakeAnswer).number;
       const isAnswerCorrect = prevNumber % 2 && evenodd == DB.EvenOdd.Odd;
 
-      DB.increaseGamePlayerPoints(gameId, playerId, transaction);
+      DB.increaseGamePlayerPoints(gameId, uid, transaction);
       if (prevNumber && isAnswerCorrect) {
-        DB.increaseGamePlayerPoints(gameId, playerId, transaction);
+        DB.increaseGamePlayerPoints(gameId, uid, transaction);
       }
 
       // DB.updateGameAnswerNumber(gameId, number, transaction);
