@@ -10,7 +10,7 @@ import Answer from 'components/Answer';
 import GameNavbar from 'components/GameNavbar';
 
 const mapState = (state: IGameState) => ({
-    winner: '',
+    winner: '11',
     waitTurn: false,
 });
 
@@ -25,15 +25,12 @@ type PropsFromNavigation = {gameId: string};
  * Пока участник ждёт других игроков, экран блокируется
  * Когда игра закончилась, выводим сообщение, что игра закончена и имя победителя
  */
-function GamePage ({gameId='', winner, waitTurn}: PropsFromRedux & PropsFromNavigation) {
+function GamePage ({gameId='', winner, waitTurn=true}: PropsFromRedux & PropsFromNavigation) {
 
     const redirectPath = '/';
 
     // Эффект окончания игры
     useEffect(() => {
-        if (f7.views.main.router.currentRoute.path == redirectPath) {
-            return;
-        }
 
         if (winner) {
             const winnerDialog = f7.dialog.create({
@@ -43,7 +40,10 @@ function GamePage ({gameId='', winner, waitTurn}: PropsFromRedux & PropsFromNavi
                     {
                         text: 'Ок',
                         close: false,
-                        onClick: () => {f7.views.main.router.navigate(redirectPath)}
+                        onClick: () => {
+                            f7.views.main.router.navigate(redirectPath)
+                            winnerDialog.close()
+                        }
                     }
                 ]
             });
@@ -55,7 +55,7 @@ function GamePage ({gameId='', winner, waitTurn}: PropsFromRedux & PropsFromNavi
 
             return () => winnerDialog.close();
         }
-    });
+    }, [winner]);
 
     // Эфект блокировки игры
     useEffect(() => {
@@ -69,7 +69,7 @@ function GamePage ({gameId='', winner, waitTurn}: PropsFromRedux & PropsFromNavi
             })
         }
         return () => {f7.dialog.close()}
-    });
+    }, [winner, waitTurn]);
 
     return (
         <>
