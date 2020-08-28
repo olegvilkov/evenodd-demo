@@ -5,6 +5,7 @@ import errors from './errors';
 import loading from './loading';
 import currentgame from './currentgame';
 import user from './user';
+import playerlist from './playerlist';
 
 const rootReducer = combineReducers({
   gameslist,
@@ -12,6 +13,7 @@ const rootReducer = combineReducers({
   loading,
   currentgame,
   user,
+  playerlist,
 })
 
 export default rootReducer;

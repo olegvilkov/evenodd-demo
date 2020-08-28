@@ -2,7 +2,7 @@ import { db } from 'utils/firebase';
 import { IGame } from 'redux/reducers/currentgame/types';
 import { ChangeGamesListType } from 'redux/sagas/gameslist/types';
 import { ChangeGameCallbackType } from 'redux/sagas/currentgame/types';
-import { IPlayer } from 'redux/reducers/players/types';
+import { IPlayer } from 'redux/reducers/playerlist/types';
 import { addGamePlayerInTransaction } from './players';
 
 /**

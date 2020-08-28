@@ -4,6 +4,7 @@ import { joinGameSagas } from './joingame';
 import { gamesListSagas } from './gameslist';
 import { currentGameSagas } from './currentgame';
 import { userSagas } from './user';
+import { playerListSagas } from './playerslist';
 
 /**
  * root saga
@@ -15,5 +16,6 @@ export default function* sagas() {
     ...gamesListSagas,
     ...currentGameSagas,
     ...userSagas,
+    ...playerListSagas
   ]);
 }

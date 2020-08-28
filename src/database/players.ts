@@ -1,6 +1,6 @@
 import { db, dbHelper } from 'utils/firebase';
-import { IPlayer } from 'redux/reducers/players/types';
-import { playerData } from 'redux/sagas/joingame';
+import { IPlayer } from 'redux/reducers/playerlist/types';
+import { IChangeGamePlayers } from 'redux/sagas/playerslist/types';
 
 const increseByOne = dbHelper.FieldValue.increment(1);
 
@@ -45,4 +45,22 @@ export function addGamePlayerInTransaction (
     transaction.set(playerGameDocRef, {});
 
     return transaction.set(playersDocRef, player);
+}
+
+
+/**
+ * Listen game players collection for realtime updates
+ * @returns unsubscribe
+ */
+export function listenGamePlayers ( gameId: string, callbackfn: IChangeGamePlayers ) {
+  return db.collection(`games/${gameId}/players`)
+      .onSnapshot(function(snapshot) {
+          snapshot.docChanges().forEach(function(change) {
+            const id = change.doc.id;
+            const data = change.doc.data();
+            const type = change.type;
+            const payload = {...data, id} as IPlayer;
+            callbackfn({type, payload});
+          });
+      });
 }
