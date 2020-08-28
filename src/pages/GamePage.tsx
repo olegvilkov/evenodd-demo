@@ -71,11 +71,13 @@ function GamePage ({gameId='', winner, waitTurn}: PropsFromRedux & PropsFromNavi
     });
 
     return (
-       <Page loginScreen>
+        <>
         <GameNavbar title='Игра' gameId={gameId} />
-        <Answer />
-        <ScoreList gameId={gameId}/>
-       </Page>
+        <Page loginScreen>
+            <Answer />
+            <ScoreList gameId={gameId}/>
+        </Page>
+        </>
     )
 }
 
