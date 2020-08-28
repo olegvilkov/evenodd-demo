@@ -2,11 +2,14 @@ import React, { useEffect } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import { selectPlayers } from 'redux/reducers/playerlist/selector';
 import { IPlayerListState } from 'redux/reducers/playerlist/types';
+import { selectUser } from 'redux/reducers/user/selector';
+import { IUserState } from 'redux/reducers/user/types';
 import { subscribeToGamePlayers, unSubscribeFromGamePlayers } from 'redux/sagas/playerslist/actions';
 
 import { List, BlockHeader, ListItem } from 'framework7-react';
 
-const mapState = (state: IPlayerListState) => ({
+const mapState = (state: IPlayerListState & IUserState) => ({
+    user: selectUser(state),
     players: selectPlayers(state),
 });
 
@@ -19,7 +22,7 @@ type Props = { gameId: string } & PropsFromRedux;
  * 
  * Выводит имена игроков и их текущие очки.
  */
-function ScoreList ({gameId, players=[], subscribeToGamePlayers, unSubscribeFromGamePlayers}: Props) {
+function ScoreList ({gameId, user, players, subscribeToGamePlayers, unSubscribeFromGamePlayers}: Props) {
 
     useEffect(() => {
         subscribeToGamePlayers( gameId );
@@ -32,9 +35,10 @@ function ScoreList ({gameId, players=[], subscribeToGamePlayers, unSubscribeFrom
         <>
         <BlockHeader>{header}</BlockHeader>
         <List simple-list>
-            {players.map(player => (
-                <ListItem key={player.id} title={player.name} badge={`${player.points}`}></ListItem>
-            ))}
+            {players.map(player => {
+                const footer = player.id == user.uid ? 'Это ваши очки' : '';
+                return <ListItem footer={footer} key={player.id} title={player.name} badge={`${player.points}`} />
+            })}
         </List>
         </>
     )
