@@ -3,7 +3,8 @@ import { IUser, UserActionType } from './types';
 
 const initialState: IUser = {
   name: '',
-  uid: ''
+  uid: '',
+  isAnonymous: false,
 };
 
 /**
@@ -13,7 +14,12 @@ export default function userReducer (state = initialState, action: UserActionTyp
   switch (action.type) {
     
     case USER_UPDATE_PROFILE_SUCCESS:
-      return {...state, name: action.payload.displayName, uid: action.payload.uid};
+      const user = action.payload;
+      return {...state,
+        name: user.displayName,
+        uid: user.uid,
+        isAnonymous: user.isAnonymous,
+      };
         
     default:
       return state;
