@@ -7,6 +7,7 @@ import { IUserState } from 'redux/reducers/user/types';
 import { f7 } from 'framework7-react';
 import { Page, List, ListInput, ListButton } from 'framework7-react';
 import GameNavbar from 'components/GameNavbar';
+import withGameSubscription from 'hoc/GameSubscription';
 
 const mapState = (state: IGameState & IUserState) => ({
     currentUsername: selectUserName(state),
@@ -29,7 +30,6 @@ function JoinGamePage ({ currentUsername='', gameId=''}: PropsFromRedux & PropsF
         <GameNavbar
             title="Присоединиться к игре"
             backLink={true}
-            gameId={gameId}
         />
         <Page loginScreen>
             
@@ -50,4 +50,6 @@ function JoinGamePage ({ currentUsername='', gameId=''}: PropsFromRedux & PropsF
     )
 }
 
-export default connector(JoinGamePage)
+export default connector(
+    withGameSubscription(JoinGamePage)
+)

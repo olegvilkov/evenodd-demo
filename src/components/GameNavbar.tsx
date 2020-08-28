@@ -1,6 +1,5 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { connect, ConnectedProps } from 'react-redux';
-import { subscribeToGame, unSubscribeFromGame } from 'redux/sagas/currentgame/actions';
 import { selectCurrentGame } from 'redux/reducers/currentgame/selector';
 import { IGameState } from 'redux/reducers/currentgame/types';
 
@@ -11,11 +10,10 @@ const mapState = (state: IGameState) => ({
     game: selectCurrentGame(state),
 });
 
-const connector = connect(mapState, { subscribeToGame, unSubscribeFromGame });
+const connector = connect(mapState, {});
 
 type PropsFromRedux = ConnectedProps<typeof connector>;
 type Props = {
-        gameId?: string,
         title: string,
         backLink?: boolean,
     } & PropsFromRedux;
@@ -28,25 +26,13 @@ type Props = {
 function GameNavbar ({
     backLink=false,
     title,
-    gameId="",
     game,
-    subscribeToGame,
-    unSubscribeFromGame
 }: Props) {
-
-    // Эффект прослушивания изменений в текущей игре
-    useEffect(() => {
-        if (!gameId) {
-            return;
-        }
-        subscribeToGame( gameId );
-        return ()=>{ unSubscribeFromGame() }
-    }, []);
 
     let subtitle;
 
     // Информация об игре
-    if (gameId) {
+    if (game.id) {
         subtitle = game.name ?
             `${game.name} (${game.playersCount}/${game.playersForStart})`
             :

@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import { IGameState } from 'redux/reducers/currentgame/types';
+import withGameSubscription from 'hoc/GameSubscription';
 
 import { f7, f7ready } from 'framework7-react';
 import { Page } from 'framework7-react';
@@ -72,7 +73,7 @@ function GamePage ({gameId='', winner, waitTurn}: PropsFromRedux & PropsFromNavi
 
     return (
         <>
-        <GameNavbar title='Игра' gameId={gameId} />
+        <GameNavbar title='Игра' />
         <Page loginScreen>
             <Answer />
             <ScoreList gameId={gameId}/>
@@ -81,4 +82,6 @@ function GamePage ({gameId='', winner, waitTurn}: PropsFromRedux & PropsFromNavi
     )
 }
 
-export default connector(GamePage)
+export default connector(
+    withGameSubscription(GamePage)
+)
