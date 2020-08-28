@@ -1,3 +1,3 @@
 import { IPlayerListState } from './types';
 
-export const selectGamesList = (state: IPlayerListState) => state.playerlist;
+export const selectPlayers = (state: IPlayerListState) => state.playerlist;
