@@ -36,7 +36,7 @@ function ScoreList ({gameId, user, players, subscribeToGamePlayers, unSubscribeF
         <BlockHeader>{header}</BlockHeader>
         <List simple-list>
             {players.map(player => {
-                const footer = player.id == user.uid ? 'Это ваши очки' : '';
+                const footer = player.id == user.uid ? 'Это вы' : '';
                 return <ListItem footer={footer} key={player.id} title={player.name} badge={`${player.points}`} />
             })}
         </List>
