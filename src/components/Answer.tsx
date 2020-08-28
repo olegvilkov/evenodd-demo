@@ -17,12 +17,12 @@ function Answer ({makeAnswer}: PropsFromRedux) {
 
     return (
         <>
-        <BlockHeader>Угадайте четное или нечетное число загадал предыдущий участник</BlockHeader>
+        <BlockHeader>Угадайте четное или нечетное число загадал предыдущий участник:</BlockHeader>
         <List>
             <ListItem radio value={EvenOdd.Even} name="demo-radio" title="Чётное" onChange={(e)=>{setIsEven(EvenOdd.Even)}} defaultChecked />
             <ListItem radio value={EvenOdd.Odd} name="demo-radio" title="Нечётное" onChange={(e)=>{setIsEven(EvenOdd.Odd)}} />
         </List>
-        <BlockHeader>Загадайте своё число для следующего игрока</BlockHeader>
+        <BlockHeader>Загадайте своё число для следующего игрока:</BlockHeader>
         <Block className="text-align-center">
           <Stepper fill value={number} onStepperChange={(value)=>setNumber(value)}></Stepper>
         </Block>
