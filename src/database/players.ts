@@ -25,7 +25,7 @@ export function addGamePlayer (gameId: string, playerId: string, player: IPlayer
  * Transaction operation for add player in game
  * Can be called from other transaction opertaions
  * @param gameDocRef 
- * @param player 
+ * @param playerId 
  * @param player 
  * @param transaction
  */
@@ -35,11 +35,14 @@ export function addGamePlayerInTransaction (
     player: IPlayer,
     transaction: firebase.firestore.Transaction,
 ) {
-    const playersDocRef = gameDocRef.collection('players').doc(`${playerId}`);
+    const playersDocRef = gameDocRef.collection('players').doc(playerId);
 
     transaction.update(gameDocRef, {
       playersCount: increseByOne
-    })
+    });
+
+    const playerGameDocRef = db.doc(`playergames/${playerId}/games/${gameDocRef.id}`);
+    transaction.set(playerGameDocRef, {});
 
     return transaction.set(playersDocRef, player);
 }
