@@ -2,14 +2,12 @@ import React, { useEffect } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import { subscribeToGame, unSubscribeFromGame } from 'redux/sagas/currentgame/actions';
 import { selectCurrentGame } from 'redux/reducers/currentgame/selector';
-import { selectUser } from 'redux/reducers/user/selector';
 import { IGameState } from 'redux/reducers/currentgame/types';
-import { IUserState } from 'redux/reducers/user/types';
 
-import { Navbar, NavRight, Link, Icon } from 'framework7-react';
+import { Navbar } from 'framework7-react';
+import Avatar from 'components/Avatar';
 
-const mapState = (state: IGameState & IUserState) => ({
-    user: selectUser(state),
+const mapState = (state: IGameState) => ({
     game: selectCurrentGame(state),
 });
 
@@ -24,15 +22,14 @@ type Props = {
 
 /**
  * Компонент для отображения заголовка экрана
- * и информации о текущей игре
- * и о теущем пользователе
+ * и информации о текущей игре.
+ * А так же информацию о теущем пользователе.
  */
 function GameNavbar ({
     backLink=false,
     title,
     gameId="",
     game,
-    user,
     subscribeToGame,
     unSubscribeFromGame
 }: Props) {
@@ -47,7 +44,6 @@ function GameNavbar ({
     }, []);
 
     let subtitle;
-    let avatar;
 
     // Информация об игре
     if (gameId) {
@@ -57,26 +53,9 @@ function GameNavbar ({
             'Загрузка данных об игре...';
     }
 
-    // Информация о текущем пользователе
-    if (user.name) {
-        const nameWorlds = user.name.split(' ');
-        if (nameWorlds.length >= 2) {
-            avatar = nameWorlds[0].substring(0, 1) + nameWorlds[1].substring(0, 1);
-            avatar = avatar.toLocaleUpperCase();
-        } else {
-            avatar = user.name.substring(0, 2)
-        }
-    }
-
     return (
-        <Navbar title={title} subtitle={subtitle}>
-            <NavRight>
-                <Link iconOnly tooltip={user.name}>
-                    <Icon>
-                        {avatar}
-                    </Icon>
-                </Link>
-            </NavRight>
+        <Navbar title={title} subtitle={subtitle} backLink={backLink}>
+            <Avatar />
         </Navbar>
     )
 }

@@ -5,6 +5,7 @@ import { selectUserName } from 'redux/reducers/user/selector';
 import { IUserState } from 'redux/reducers/user/types';
 
 import { Page, List, Navbar, ListInput, ListButton } from 'framework7-react';
+import Avatar from 'components/Avatar';
 
 const mapState = (state: IUserState) => ({
     currentUsername: selectUserName(state),
@@ -45,7 +46,9 @@ function CreateGamePage ({ currentUsername, createGame }: PropsFromRedux) {
 
     return (
         <Page loginScreen>
-            <Navbar title="Создать игру" backLink={true}/>
+            <Navbar title="Создать игру" backLink={true}>
+                <Avatar />
+            </Navbar>
             <List form>
                 <ListInput
                 label="Количество игроков"
