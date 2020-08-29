@@ -1,15 +1,15 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import { IGameState } from 'redux/reducers/currentgame/types';
 import withGameSubscription from 'hoc/GameSubscription';
 
-import { f7, f7ready } from 'framework7-react';
 import { Page } from 'framework7-react';
 import ScoreList from 'components/ScoreList';
 import Answer from 'components/Answer';
 import GameNavbar from 'components/GameNavbar';
 import { selectCurrentGame } from 'redux/reducers/currentgame/selector';
 import GameWaiting from 'components/GameWaiting';
+import GameWinner from 'components/GameWinner';
 
 const mapState = (state: IGameState) => ({
     game: selectCurrentGame(state)
@@ -27,41 +27,10 @@ type PropsFromNavigation = {gameId: string};
  * Когда игра закончилась, выводим сообщение, что игра закончена и имя победителя
  */
 function GamePage ({gameId='', game}: PropsFromRedux & PropsFromNavigation) {
-
-    const {winner} = game;
-    const redirectPath = '/';
-
-    // Эффект окончания игры
-    useEffect(() => {
-
-        if (winner) {
-            const winnerDialog = f7.dialog.create({
-                title: 'Игра закончена',
-                text: `Победитель <b>${winner}</b>`,
-                buttons: [
-                    {
-                        text: 'Ок',
-                        close: false,
-                        onClick: () => {
-                            f7.views.main.router.navigate(redirectPath)
-                            winnerDialog.close()
-                        }
-                    }
-                ]
-            });
-
-            f7ready(() => {
-                f7.dialog.close();
-                winnerDialog.open();
-            })
-
-            return () => winnerDialog.close();
-        }
-    }, [winner]);
-
     return (
         <>
         <GameWaiting game={game} />
+        <GameWinner game={game} />
         <GameNavbar title='Игра' />
         <Page loginScreen>
             <Answer />
