@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import { IGameState } from 'redux/reducers/currentgame/types';
 import withGameSubscription from 'hoc/GameSubscription';
@@ -9,10 +9,9 @@ import ScoreList from 'components/ScoreList';
 import Answer from 'components/Answer';
 import GameNavbar from 'components/GameNavbar';
 import { selectCurrentGame } from 'redux/reducers/currentgame/selector';
+import GameWaiting from 'components/GameWaiting';
 
 const mapState = (state: IGameState) => ({
-    winner: '',
-    waitTurn: false,
     game: selectCurrentGame(state)
 });
 
@@ -27,13 +26,10 @@ type PropsFromNavigation = {gameId: string};
  * Пока участник ждёт других игроков, экран блокируется
  * Когда игра закончилась, выводим сообщение, что игра закончена и имя победителя
  */
-function GamePage ({gameId='', game, winner, waitTurn}: PropsFromRedux & PropsFromNavigation) {
+function GamePage ({gameId='', game}: PropsFromRedux & PropsFromNavigation) {
 
-    const {playersForStart, playersCount} = game;
+    const {winner} = game;
     const redirectPath = '/';
-    const waitPlayerMessage = `Ожидание присоединения всех игроков (${playersCount}/${playersForStart})`;
-    const waitTurnMessage = 'Сейчас не ваш ход';
-    const waitGameMessage = 'Подключение к игре';
 
     // Эффект окончания игры
     useEffect(() => {
@@ -63,27 +59,9 @@ function GamePage ({gameId='', game, winner, waitTurn}: PropsFromRedux & PropsFr
         }
     }, [winner]);
 
-    // Эфект блокировки игры 
-    useEffect(() => {
-        const waitGame = game.isLoading;
-        const waitPlayer = playersCount < playersForStart;
-        const waitMessage = waitGame && waitGameMessage || waitPlayer && waitPlayerMessage || waitTurnMessage;
-        const waitDialog = waitGame || waitPlayer || waitTurn;
-
-        if (!winner) {
-            f7ready(() => {
-                if (waitDialog) {
-                    f7.dialog.progress(waitMessage);
-                } else {
-                    f7.dialog.close();
-                }
-            })
-        }
-        return () => {f7.dialog.close()}
-    }, [winner, game]);
-
     return (
         <>
+        <GameWaiting game={game} />
         <GameNavbar title='Игра' />
         <Page loginScreen>
             <Answer />

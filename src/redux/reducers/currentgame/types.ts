@@ -2,13 +2,14 @@
 import { GAME_UPDATE, GAME_CLEAR } from 'redux/actionTypes';
 
 export interface IGame {
-    id?: string
+    id: string
     name: string
     playersCount: number
     playersForStart: number
     roundsForWin: number
-    winner?: string
-    isLoading?: boolean
+    winner: string
+    isLoading: boolean
+    waitTurn: boolean
 }
 
 export interface IGameUpdate {
