@@ -5,6 +5,7 @@ import { gamesListSagas } from './gameslist';
 import { currentGameSagas } from './currentgame';
 import { userSagas } from './user';
 import { playerListSagas } from './playerslist';
+import { answerSagas } from './answer';
 
 /**
  * root saga
@@ -16,6 +17,7 @@ export default function* sagas() {
     ...gamesListSagas,
     ...currentGameSagas,
     ...userSagas,
-    ...playerListSagas
+    ...playerListSagas,
+    ...answerSagas,
   ]);
 }
