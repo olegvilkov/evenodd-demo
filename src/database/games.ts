@@ -28,7 +28,7 @@ export function addGameWithPlayer (game: Partial<IGame>, playerId: string, playe
  * @returns unsubscribe
  */
 export function listenGamesCollection ( callbackfn: ChangeGamesListType ) {
-    return db.collection("games")
+    return db.collection("games").orderBy('name')
         .onSnapshot(function(snapshot) {
             snapshot.docChanges().forEach(function(change) {
                 const id = change.doc.id;
