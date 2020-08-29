@@ -4,13 +4,12 @@ import { ChangeGamesListType } from 'redux/sagas/gameslist/types';
 import { ChangeGameCallbackType } from 'redux/sagas/currentgame/types';
 import { IPlayer } from 'redux/reducers/playerlist/types';
 import { addGamePlayerInTransaction } from './players';
-import ContactsListComponent from 'framework7/components/contacts-list/contacts-list';
 
 /**
  * Add game and add player in this game
  * @param game 
  */
-export function addGameWithPlayer (game: IGame, playerId: string, player: IPlayer) {
+export function addGameWithPlayer (game: Partial<IGame>, playerId: string, player: IPlayer) {
     const gameDocRef = db.collection("games").doc();
 
     return db.runTransaction(function(transaction) {
