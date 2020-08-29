@@ -18,13 +18,16 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
  */
 function ErrorsHandler ({ errors=[], deleteAppErrors }: PropsFromRedux) {
 
+    // Таймаут зависит от количества текста в сообщении
+    const closeTimeout = errors.join('').length*100 - errors.slice(0, errors.length / 2).join('').length*100;
+
     const props: IToast.Parameters = {
         text: errors.join('<br/>'),
         position: 'bottom',
         closeButton: true,
         closeButtonText: 'OK',
         closeButtonColor: 'red',
-        closeTimeout: 5000,
+        closeTimeout,
         on: {
             closed: () => {
                 deleteAppErrors( errors )
