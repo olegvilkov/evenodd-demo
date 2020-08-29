@@ -10,7 +10,7 @@ export default function gameReducer (state = initialState, action: GameActionTyp
   switch (action.type) {
     
     case GAME_UPDATE:
-      return action.payload;
+      return {...state, ...action.payload};
     
     case GAME_CLEAR:
       return {};

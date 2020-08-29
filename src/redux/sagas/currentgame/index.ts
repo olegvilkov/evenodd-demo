@@ -9,6 +9,7 @@ import { selectUser } from 'redux/reducers/user/selector';
 import { updateCurrentGame, clearCurrentGame } from 'redux/reducers/currentgame/actions';
 import { navigate } from 'utils/router';
 import * as DB from 'database';
+import { IGame } from 'redux/reducers/currentgame/types';
 
 let currentGameChannel: EventChannel<unknown> | null = null;
 
@@ -25,6 +26,8 @@ function* subscribeToGame({gameId}: ISubscribeToGame) {
     yield unSubscribeFromGame();
   }
 
+  yield put ( updateCurrentGame({ isLoading: true } as IGame) );
+
   try {
     currentGameChannel = eventChannel(emit => {
       // returns unsubscribe
@@ -34,14 +37,15 @@ function* subscribeToGame({gameId}: ISubscribeToGame) {
     while (true) {
       const game = yield take(currentGameChannel);
       if (!game.name) {
+        yield unSubscribeFromGame();
+        yield call(navigate, `/`);
         throw new Error('Game not exists!');
       }
-      yield put ( updateCurrentGame(game) );
+      yield put ( updateCurrentGame({...game, isLoading: false}) );
     }
 
   } catch (e) {
     yield put( addAppError(e.message) );
-    yield call(navigate, `/`);
   }
 }
 

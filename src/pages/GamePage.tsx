@@ -29,8 +29,8 @@ type PropsFromNavigation = {gameId: string};
  */
 function GamePage ({gameId='', game, winner, waitTurn}: PropsFromRedux & PropsFromNavigation) {
 
-    const redirectPath = '/';
     const {playersForStart, playersCount} = game;
+    const redirectPath = '/';
     const waitPlayerMessage = `Ожидание присоединения всех игроков (${playersCount}/${playersForStart})`;
     const waitTurnMessage = 'Сейчас не ваш ход';
     const waitGameMessage = 'Подключение к игре';
@@ -65,8 +65,8 @@ function GamePage ({gameId='', game, winner, waitTurn}: PropsFromRedux & PropsFr
 
     // Эфект блокировки игры 
     useEffect(() => {
+        const waitGame = game.isLoading;
         const waitPlayer = playersCount < playersForStart;
-        const waitGame = !playersForStart;
         const waitMessage = waitGame && waitGameMessage || waitPlayer && waitPlayerMessage || waitTurnMessage;
         const waitDialog = waitGame || waitPlayer || waitTurn;
 
@@ -80,7 +80,7 @@ function GamePage ({gameId='', game, winner, waitTurn}: PropsFromRedux & PropsFr
             })
         }
         return () => {f7.dialog.close()}
-    }, [winner, playersForStart, playersCount]);
+    }, [winner, game]);
 
     return (
         <>

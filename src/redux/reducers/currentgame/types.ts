@@ -8,6 +8,7 @@ export interface IGame {
     playersForStart: number
     roundsForWin: number
     winner?: string
+    isLoading?: boolean
 }
 
 export interface IGameUpdate {
