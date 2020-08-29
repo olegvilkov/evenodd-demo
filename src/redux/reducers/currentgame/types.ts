@@ -9,7 +9,6 @@ export interface IGame {
     roundsForWin: number
     winner: string
     isLoading: boolean
-    waitTurn: boolean
 }
 
 export interface IGameUpdate {

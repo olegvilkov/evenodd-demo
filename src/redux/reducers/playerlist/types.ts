@@ -5,6 +5,7 @@ export interface IPlayer {
     name: string
     order: number
     points: number
+    round: number
 }
 
 export type IPlayerList = Array<IPlayer>
