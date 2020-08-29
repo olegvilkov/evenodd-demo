@@ -64,3 +64,23 @@ export function listenGamePlayers ( gameId: string, callbackfn: IChangeGamePlaye
           });
       });
 }
+
+/**
+ * Increase Player points by one
+ */
+export function increaseGamePlayerPoints (gameId: string, playerId: string, transaction: firebase.firestore.Transaction) {
+  const playerDocRef = db.doc(`games/${gameId}/players/${playerId}`);
+  transaction.update(playerDocRef, {
+      points: increseByOne
+  });
+}
+
+/**
+ * Increase Player round by one
+ */
+export function increasePlayerRound (gameId: string, playerId: string, transaction: firebase.firestore.Transaction) {
+  const playerDocRef = db.doc(`games/${gameId}/players/${playerId}`);
+  transaction.update(playerDocRef, {
+      round: increseByOne
+  });
+}

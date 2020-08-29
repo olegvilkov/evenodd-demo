@@ -39,24 +39,10 @@ export function runGameAnswerTransaction (
     });
 }
 
-export function increaseGamePlayerPoints (gameId: string, playerId: string, transaction: firebase.firestore.Transaction) {
-    const playerDocRef = db.doc(`games/${gameId}/${playerId}`);
-    transaction.update(playerDocRef, {
-        points: increseByOne
-    });
-}
-
 export function updateGameAnswerNumber (gameId: string, number: number, transaction: firebase.firestore.Transaction) {
     const answerDocRef = db.doc(`gameanswers/${gameId}`);
     transaction.update(answerDocRef, {
         number,
         mode: AnswerMode.WaitForEvenOdd,
-    });
-}
-
-export function increasePlayerRound (gameId: string, playerId: string, transaction: firebase.firestore.Transaction) {
-    const playerDocRef = db.doc(`games/${gameId}/${playerId}`);
-    transaction.update(playerDocRef, {
-        round: increseByOne
     });
 }
