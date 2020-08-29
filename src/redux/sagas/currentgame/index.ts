@@ -27,7 +27,7 @@ function* subscribeToGame({gameId}: ISubscribeToGame) {
   try {
     currentGameChannel = eventChannel(emit => {
       // returns unsubscribe
-      return DB.listenGamesDoc( gameId, emit );
+      return DB.listenGame( gameId, emit );
     });
 
     while (true) {

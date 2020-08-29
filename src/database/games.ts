@@ -4,6 +4,7 @@ import { ChangeGamesListType } from 'redux/sagas/gameslist/types';
 import { ChangeGameCallbackType } from 'redux/sagas/currentgame/types';
 import { IPlayer } from 'redux/reducers/playerlist/types';
 import { addGamePlayerInTransaction } from './players';
+import ContactsListComponent from 'framework7/components/contacts-list/contacts-list';
 
 /**
  * Add game and add player in this game
@@ -31,11 +32,11 @@ export function listenGamesCollection ( callbackfn: ChangeGamesListType ) {
     return db.collection("games")
         .onSnapshot(function(snapshot) {
             snapshot.docChanges().forEach(function(change) {
-            const id = change.doc.id;
-            const data = change.doc.data();
-            const type = change.type;
-            const payload = {...data, id} as IGame;
-            callbackfn({type, payload});
+                const id = change.doc.id;
+                const data = change.doc.data();
+                const type = change.type;
+                const payload = {...data, id} as IGame;
+                callbackfn({type, payload});
             });
         });
 }
@@ -44,7 +45,7 @@ export function listenGamesCollection ( callbackfn: ChangeGamesListType ) {
  * Listen game doc for realtime updates
  * @returns unsubscribe
  */
-export function listenGamesDoc ( gameId: string, callbackfn: ChangeGameCallbackType ) {
+export function listenGame ( gameId: string, callbackfn: ChangeGameCallbackType ) {
     return db.doc(`games/${gameId}`)
       .onSnapshot(function(doc) {
         const id = doc.id;
