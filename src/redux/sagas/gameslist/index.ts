@@ -1,6 +1,6 @@
 import { GAMES_LIST_SUBSCRIBE, GAMES_LIST_UNSUBSCRIBE } from 'redux/actionTypes';
 import { addAppError } from 'redux/reducers/errors/actions';
-import { addGame, deleteGame, changeGame } from 'redux/reducers/gameslist/actions';
+import { addGame, deleteGame, changeGame, clearGamesList } from 'redux/reducers/gameslist/actions';
 import { take, put, takeLatest } from 'redux-saga/effects';
 import { eventChannel, EventChannel } from 'redux-saga'
 import * as DB from 'database';
@@ -45,6 +45,7 @@ function* subscribeToGamesList() {
 function* unSubscribeToGamesList() {
   if (gamesListChannel) {
     gamesListChannel.close();
+    yield put ( clearGamesList() );
   }
 }
 

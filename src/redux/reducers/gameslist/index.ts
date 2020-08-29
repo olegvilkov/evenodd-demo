@@ -1,4 +1,4 @@
-import { GAMES_LIST_CHANGE_GAME, GAMES_LIST_ADD_GAME, GAMES_LIST_DELETE_GAME } from '../../actionTypes';
+import { GAMES_LIST_CHANGE_GAME, GAMES_LIST_ADD_GAME, GAMES_LIST_DELETE_GAME, GAMES_LIST_CLEAR } from '../../actionTypes';
 import { ActionTypes, IGameList } from './types';
 
 const initialState: IGameList = [];
@@ -17,7 +17,10 @@ export default function gamesListReducer (state = initialState, action: ActionTy
 
     case GAMES_LIST_DELETE_GAME:
       return state.filter(game => game.id != action.payload.id);
-        
+    
+    case GAMES_LIST_CLEAR:
+      return [];
+
     default:
       return state;
   }
