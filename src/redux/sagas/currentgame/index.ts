@@ -14,7 +14,7 @@ import { IGame } from 'redux/reducers/currentgame/types';
 let currentGameChannel: EventChannel<unknown> | null = null;
 
 /**
- * saga which start listen current game changes
+ * Saga which start listener for current game
  */
 function* subscribeToGame({gameId}: ISubscribeToGame) {
 
@@ -52,7 +52,7 @@ function* subscribeToGame({gameId}: ISubscribeToGame) {
 }
 
 /**
- * saga which stop listen changes ln game
+ * Saga which stop listener for current game
  */
 function* unSubscribeFromGame() {
   if (currentGameChannel) {
@@ -62,9 +62,10 @@ function* unSubscribeFromGame() {
 }
 
 /**
- * Saga wich save user answer.
- * Increase player points if answer correct
- * and finish player turn.
+ * Saga wich
+ * - Save user answer
+ * - Increase player points if answer correct
+ * - Finish player turn.
  * @param param0 
  */
 function* makeAnswer({evenodd, number}: IMakeAnswer) {
