@@ -1,6 +1,6 @@
 import { GAME_SUBSCRIBE, GAME_UNSUBSCRIBE, GAME_ANSWER } from 'redux/actionTypes';
 import { addAppError } from 'redux/reducers/errors/actions';
-import { take, put, takeLatest, select, call } from 'redux-saga/effects';
+import { take, put, takeLatest, select, call, takeEvery } from 'redux-saga/effects';
 import { eventChannel, EventChannel } from 'redux-saga';
 import { ISubscribeToGame, IMakeAnswer } from './types';
 import { loadingOn, loadingOff } from 'redux/reducers/loading/actions';
@@ -36,11 +36,13 @@ function* subscribeToGame({gameId}: ISubscribeToGame) {
 
     while (true) {
       const game = yield take(currentGameChannel);
+      
       if (!game.name) {
         yield unSubscribeFromGame();
         yield call(navigate, `/`);
         throw new Error('Game not exists!');
       }
+
       yield put ( updateCurrentGame({...game, isLoading: false}) );
     }
 
@@ -96,7 +98,7 @@ function* makeAnswer({evenodd, number}: IMakeAnswer) {
 }
 
 export const currentGameSagas = [
-  takeLatest(GAME_SUBSCRIBE, subscribeToGame),
+  takeEvery(GAME_SUBSCRIBE, subscribeToGame),
   takeLatest(GAME_UNSUBSCRIBE, unSubscribeFromGame),
   takeLatest(GAME_ANSWER, makeAnswer)
 ];
