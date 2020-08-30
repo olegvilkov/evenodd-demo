@@ -1,6 +1,11 @@
 
 https://evenodd-demo.web.app
 
+## Серверная часть
+**[Серверная часть](functions/README.md)** реализована через Firebase cloud functions. Код на TypeScript. Функция-триггер, которая реагирует на запись данных в Firestore. Эта функция определяет, когда игра завершилась и кто победитель.
+
+<hr>
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/createreact-app).
 
 ## Available Scripts
