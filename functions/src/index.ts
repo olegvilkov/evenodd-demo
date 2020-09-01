@@ -1,14 +1,12 @@
 import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
 
-// const { warn } = require("firebase-functions/lib/logger");
-
 admin.initializeApp();
 
 const firestore = admin.firestore();
 
-// Listens for new messages added to /messages/:documentId/original and creates an
-// uppercase version of the message to /messages/:documentId/uppercase
+// Listens for changes in game player
+// Detect leader and set as game winner after K rounds
 exports.checkWinner = functions.firestore.document('/games/{gameId}/players/{playerId}')
     .onUpdate(async (snap, context) => {
 
