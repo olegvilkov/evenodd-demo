@@ -1,13 +1,17 @@
 
 import { GAME_UPDATE, GAME_CLEAR } from 'redux/actionTypes';
 
-export interface IGame {
-    id: string
+export interface IStoreGame {
+    id?: string
     name: string
-    playersCount: number
     playersForStart: number
-    roundsForWin: number
-    winner: string
+    turns: number
+    order: Array<string>
+    winner?: string
+}
+
+export interface IGame extends IStoreGame{
+    playersCount: number
     isLoading: boolean
 }
 

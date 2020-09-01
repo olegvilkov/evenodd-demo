@@ -38,11 +38,8 @@ export function addGamePlayerInTransaction (
     const playersDocRef = gameDocRef.collection('players').doc(playerId);
 
     transaction.update(gameDocRef, {
-      playersCount: increseByOne
+      order: dbHelper.FieldValue.arrayUnion(playerId)
     });
-
-    const playerGameDocRef = db.doc(`playergames/${playerId}/games/${gameDocRef.id}`);
-    transaction.set(playerGameDocRef, {});
 
     return transaction.set(playersDocRef, player);
 }
@@ -72,15 +69,5 @@ export function increaseGamePlayerPoints (gameId: string, playerId: string, tran
   const playerDocRef = db.doc(`games/${gameId}/players/${playerId}`);
   transaction.update(playerDocRef, {
       points: increseByOne
-  });
-}
-
-/**
- * Increase Player round by one
- */
-export function increasePlayerRound (gameId: string, playerId: string, transaction: firebase.firestore.Transaction) {
-  const playerDocRef = db.doc(`games/${gameId}/players/${playerId}`);
-  transaction.update(playerDocRef, {
-      round: increseByOne
   });
 }

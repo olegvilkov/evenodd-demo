@@ -1,13 +1,12 @@
 import { useEffect } from 'react';
-import { IGame } from 'redux/reducers/currentgame/types';
+import { IGame, IGameState } from 'redux/reducers/currentgame/types';
 import { connect, ConnectedProps } from 'react-redux';
 import { selectIsWaitTurn } from 'redux/reducers/currentgame/selector';
 import { IUserState } from 'redux/reducers/user/types';
-import { IPlayerListState } from 'redux/reducers/playerlist/types';
 
 import { f7, f7ready } from 'framework7-react';
 
-const mapState = (state: IPlayerListState & IUserState) => ({
+const mapState = (state: IGameState & IUserState) => ({
     waitTurn: selectIsWaitTurn(state)
 });
 

@@ -8,6 +8,7 @@ import { selectUser } from 'redux/reducers/user/selector';
 import { loadingOn, loadingOff } from 'redux/reducers/loading/actions';
 import { playerData } from '../joingame';
 import { navigate } from 'utils/router';
+import { IStoreGame } from 'redux/reducers/currentgame/types';
 import * as DB from 'database';
 
 /**
@@ -16,11 +17,19 @@ import * as DB from 'database';
  * and if failed then dispatch error
  */
 function* createGame({username, playersForStart}: ICreateGame) {
-  const game = {
+
+  // Каждый участник в течение игры делает K-ходов
+  const K = remoteConfig.getNumber('K');
+
+  // Количество ходов до завершения игры
+  // +1 так как у первого хода нет возможности заработать point.
+  const turns = K*playersForStart + 1;
+
+  const game: IStoreGame = {
     playersForStart,
     name: `Создатель игры: ${username}`,
-    roundsForWin: remoteConfig.getNumber('K'),
-    playersCount: 0,
+    turns,
+    order: []
   };
 
   const player = playerData(username);

@@ -1,5 +1,5 @@
-import { db } from 'utils/firebase';
-import { IGame } from 'redux/reducers/currentgame/types';
+import { db, dbHelper } from 'utils/firebase';
+import { IGame, IStoreGame } from 'redux/reducers/currentgame/types';
 import { ChangeGamesListType } from 'redux/sagas/gameslist/types';
 import { ChangeGameCallbackType } from 'redux/sagas/currentgame/types';
 import { IPlayer } from 'redux/reducers/playerlist/types';
@@ -9,7 +9,7 @@ import { addGamePlayerInTransaction } from './players';
  * Add game and add player in this game
  * @param game 
  */
-export function addGameWithPlayer (game: Partial<IGame>, playerId: string, player: IPlayer) {
+export function addGameWithPlayer (game: IStoreGame, playerId: string, player: IPlayer) {
     const gameDocRef = db.collection("games").doc();
 
     return db.runTransaction(function(transaction) {
@@ -53,3 +53,23 @@ export function listenGame ( gameId: string, callbackfn: ChangeGameCallbackType 
         callbackfn(payload);
       });
   }
+
+/**
+ * Уменьшает количество ходов в игре до окончания игры на 1
+ */
+export function decreaseGameTurns (gameId: string, transaction: firebase.firestore.Transaction) {
+    const gameDocRef = db.doc(`games/${gameId}`);
+    transaction.update(gameDocRef, {
+        turns: dbHelper.FieldValue.increment(-1)
+    });
+}
+
+/**
+ * Обновляет порядок ходов игроков вигре
+ */
+export function updateGameOrder (gameId: string, order: Array<string>, transaction: firebase.firestore.Transaction) {
+    const gameDocRef = db.doc(`games/${gameId}`);
+    transaction.update(gameDocRef, {
+        order,
+    });
+}

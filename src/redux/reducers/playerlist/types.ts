@@ -3,9 +3,7 @@ import { PLAYERS_ADD_PLAYER, PLAYERS_CHANGE_PLAYER } from 'redux/actionTypes';
 export interface IPlayer {
     id?: string
     name: string
-    order: number
     points: number
-    round: number
 }
 
 export type IPlayerList = Array<IPlayer>

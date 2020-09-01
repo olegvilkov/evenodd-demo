@@ -10,10 +10,18 @@ export default function gamesListReducer (state = initialState, action: ActionTy
   switch (action.type) {
     
     case GAMES_LIST_ADD_GAME:
-      return [...state, action.payload];
+      const game = {
+        ...action.payload,
+        playersCount: action.payload.order.length
+      }
+      return [...state, game];
 
     case GAMES_LIST_CHANGE_GAME:
-      return state.map(game => game.id == action.payload.id ? action.payload : game);
+      const update = {
+        ...action.payload,
+        playersCount: action.payload.order.length}
+      ;
+      return state.map(game => game.id == action.payload.id ? update : game);
 
     case GAMES_LIST_DELETE_GAME:
       return state.filter(game => game.id != action.payload.id);

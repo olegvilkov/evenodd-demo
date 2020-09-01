@@ -15,8 +15,12 @@ import * as DB from 'database';
  * @param param0 
  */
 function* makeAnswer({evenodd, number}: IMakeAnswer) {
-  const {id: gameId} = yield select( selectCurrentGame );
+  const {id: gameId, order} = yield select( selectCurrentGame );
   const {uid} = yield select( selectUser );
+  const nextOrder = [...order];
+
+  // Текущий игрок уходит в конец очереди
+  nextOrder.push(nextOrder.shift());
 
   yield put( loadingOn() );
   
@@ -33,7 +37,8 @@ function* makeAnswer({evenodd, number}: IMakeAnswer) {
       }
 
       DB.updateGameAnswerNumber(gameId, number, transaction);
-      DB.increasePlayerRound(gameId, uid, transaction);
+      DB.decreaseGameTurns(gameId, transaction);
+      DB.updateGameOrder(gameId, nextOrder, transaction);
     });
 
   } catch (e) {

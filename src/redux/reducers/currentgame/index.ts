@@ -10,7 +10,8 @@ export default function gameReducer (state = initialState, action: GameActionTyp
   switch (action.type) {
     
     case GAME_UPDATE:
-      return {...state, ...action.payload};
+      const game = {...state, ...action.payload};
+      return {...game, playersCount: game.order ? game.order.length : 0};
     
     case GAME_CLEAR:
       return {};
