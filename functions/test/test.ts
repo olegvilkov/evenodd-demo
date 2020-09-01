@@ -20,22 +20,25 @@ describe("Winner function must work correct.", async () => {
         }
     });
 
+    // TODO: Tests for 2 players (20 rounds limit)
+
     it("Should not set leader as winner if rounds not same", (done) => {
         done();
     });
 
-    it("Should not set leader as winner if rounds same and < roundsForWin", (done) => {
+    it("Should not set leader as winner if rounds same and < K", (done) => {
         done();
     });
 
+    it("Should set game winner if rounds > K and all players finish round turn", async function () {
 
-    it("Should set leader as winner if rounds same and > roundsForWin", async () => {
+        this.timeout(5000);
 
         // Setup: Initialize game
         const gameRef = db.doc('games/game1');
         gameRef.set({
             order: ['player1', 'player2'],
-            roundsForWin: 10,
+            K: 10,
         });
     
         // Setup: Initialize leader in points player
@@ -66,6 +69,6 @@ describe("Winner function must work correct.", async () => {
             })
         )
 
-        expect(winner).to.equal(leaderRef.id);        
+        expect(winner).to.equal(leaderRef.id);
     });
 });

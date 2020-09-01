@@ -12,35 +12,38 @@ const firestore = admin.firestore();
 exports.checkWinner = functions.firestore.document('/games/{gameId}/players/{playerId}')
     .onUpdate(async (snap, context) => {
 
-        // const player = snap.after.data();
+        const player = snap.after.data();
         const gameId = context.params.gameId;
 
-        // if (player.round < K) {
-        //     return;
-        // }
+        const gameDoc: FirebaseFirestore.DocumentData = await firestore.doc(`games/${gameId}`).get();
+        const gameData = gameDoc.data();
 
-        // const leaderSnapshot = await firestore.collection(`games/${gameId}/players`)
-        //     .orderBy('round')
-        //     .orderBy('points', 'desc')
-        //     .limit(1)
-        //     .get();
+        if (player.round < gameData.K) {
+          return;
+        }
 
-        // leaderSnapshot.forEach(async function(doc) {
-        //     const leader = doc.data();
-        //     if (player.round > leader.round) {
-        //         return;
-        //     }
-        //     await firestore.doc(`games/${gameId}`).update({
-        //         winner: 'test',
-        //     })
-        // });
+        // Get leader
+        const leaderSnapshot = await firestore.collection(`games/${gameId}/players`)
+            .orderBy('round')
+            .orderBy('points', 'desc')
+            .limit(1)
+            .get();
 
-        await firestore.doc(`games/${gameId}`).update({
-            winner: 'test2',
+        const leader: FirebaseFirestore.DocumentData = await new Promise (resolve => {
+          leaderSnapshot.forEach(async function(doc) {
+            const leader = doc.data();
+            leader.id = doc.id;
+            resolve(leader);
+          })
+        });
+
+        // For winner detect Leader round must be same as current player round
+        if (leader.round < player.round) {
+          return;
+        }
+
+        // Must return a Promise
+        return firestore.doc(`games/${gameId}`).update({
+            winner: leader.id,
         })
-      
-      // You must return a Promise when performing asynchronous tasks inside a Functions such as
-      // writing to Cloud Firestore.
-      // Setting an 'uppercase' field in Cloud Firestore document returns a Promise.
-      // return snap.ref.set({uppercase}, {merge: true});
     });
