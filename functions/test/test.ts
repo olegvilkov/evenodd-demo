@@ -5,7 +5,7 @@ const projectId = "evenodd-demo";
 const admin = firebase.initializeAdminApp({ projectId });
 const db = admin.firestore();
 
-describe("Winner function must work correct.", async () => {
+describe("Функция которая определяет, когда игра завершилась и кто победитель.", async () => {
 
     let unsubscribe: VoidFunction;
  
@@ -20,82 +20,32 @@ describe("Winner function must work correct.", async () => {
         }
     });
 
-    // TODO: Tests for 2 players (20 rounds limit)
+    
+    it("Игра заканчивается, когда каждый игрок сделал свои K-ходов, и у одного из участников больше очков, чем у других.", async function () {
 
-    it("Should not set game winner if game round not finished", async function () {
         this.timeout(5000);
+
+        const leaderId = 'leader_id';
 
         // Setup: Initialize game
         const gameRef = db.doc('games/game1');
         gameRef.set({
-            order: ['player1', 'player2'],
-            K: 10,
+            turns: 1,
         });
     
         // Setup: Initialize leader in points player
-        const player1Ref = gameRef.collection('players').doc('player1_id');
-        player1Ref.set({
-            round: 11,
-            points: 5,
+        await gameRef.collection('players').doc(leaderId).set({
+            points: 10,
         });
 
         // Setup: Initialize 2nd player
-        const player2Ref = gameRef.collection('players').doc('player2_id');
-        player2Ref.set({
-            round: 11,
-            points: 5,
-        });
-
-        // Trigger checkWinner cloud function
-        // Game round not finished becose player1 and player2 have different rounds
-        player2Ref.update({
-            round: 12,
-        });
-
-        // Listen first update to the game, it should return game winner
-        const winner = await Promise.race([
-            new Promise(resolve =>
-                unsubscribe = gameRef.onSnapshot(snap => {
-                    const data = snap.data();
-                    const winner = data && data.winner;
-                    if (winner) resolve(winner);
-                })
-            ),
-            new Promise(resolve => setTimeout(resolve, 3000, null))
-        ]);
-
-        expect(winner).be.null;
-    });
-
-    it("Should set game winner if rounds > K and all players finish round turn", async function () {
-
-        this.timeout(5000);
-
-        // Setup: Initialize game
-        const gameRef = db.doc('games/game1');
-        gameRef.set({
-            order: ['player1', 'player2'],
-            K: 10,
-        });
-    
-        // Setup: Initialize leader in points player
-        const leaderRef = gameRef.collection('players').doc('player1_id');
-        leaderRef.set({
-            round: 100,
-            points: 100,
-        });
-
-        // Setup: Initialize 2nd player
-        const player2Ref = gameRef.collection('players').doc('player2_id');
-        player2Ref.set({
-            round: 99,
-            points: 50,
+        await gameRef.collection('players').doc('player2_id').set({
+            points: 8,
         }); 
 
         // Trigger checkWinner cloud function
-        // Game round finished when all players have same round
-        player2Ref.update({
-            round: 100,
+        await gameRef.update({
+            turns: 0
         });
 
         // Listen first update to the game, it should return game winner
@@ -107,37 +57,31 @@ describe("Winner function must work correct.", async () => {
             })
         )
 
-        expect(winner).to.equal(leaderRef.id);
+        expect(winner).to.equal(leaderId);
     });
 
-    it("Should not set game winner if rounds < K", async function () {
+    it("Игра не заканчивается, пока каждый игрок не сделал свои K-ходов.", async function () {
         this.timeout(5000);
 
         // Setup: Initialize game
         const gameRef = db.doc('games/game1');
         gameRef.set({
-            order: ['player1', 'player2'],
-            K: 10,
+            turns: 2,
         });
     
         // Setup: Initialize leader in points player
-        const player1Ref = gameRef.collection('players').doc('player1_id');
-        player1Ref.set({
-            round: 5,
+        await gameRef.collection('players').doc('player1_id').set({
             points: 5,
         });
 
         // Setup: Initialize 2nd player
-        const player2Ref = gameRef.collection('players').doc('player2_id');
-        player2Ref.set({
-            round: 4,
+        await gameRef.collection('players').doc('player2_id').set({
             points: 5,
         });
 
         // Trigger checkWinner cloud function
-        // Game round finished when all players have same round
-        player2Ref.update({
-            round: 5,
+        await gameRef.update({
+            turns: 1,
         });
 
         // Listen first update to the game, it should return game winner
@@ -154,4 +98,45 @@ describe("Winner function must work correct.", async () => {
 
         expect(winner).be.null;
     });
+
+    it("Игра не заканчивается, пока у одного из участников не будет больше очков, чем у других", async function () {
+        this.timeout(5000);
+
+        // Setup: Initialize game
+        const gameRef = db.doc('games/game1');
+        gameRef.set({
+            turns: 1,
+        });
+    
+        // Setup: Initialize leader in points player
+        await gameRef.collection('players').doc('player1_id').set({
+            points: 10,
+        });
+
+        // Setup: Initialize 2nd player
+        await gameRef.collection('players').doc('player2_id').set({
+            points: 10,
+        });
+
+        // Trigger checkWinner cloud function
+        // Game round finished when all players have same round
+        await gameRef.update({
+            turns: 0
+        });
+
+        // Listen first update to the game, it should return game winner
+        const winner = await Promise.race([
+            new Promise(resolve =>
+                unsubscribe = gameRef.onSnapshot(snap => {
+                    const data = snap.data();
+                    const winner = data && data.winner;
+                    if (winner) resolve(winner);
+                })
+            ),
+            new Promise(resolve => setTimeout(resolve, 3000, null))
+        ]);
+
+        expect(winner).be.null;
+    });
+
 });

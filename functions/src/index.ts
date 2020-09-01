@@ -5,38 +5,45 @@ admin.initializeApp();
 
 const firestore = admin.firestore();
 
-// Listens for changes in game player
-// Detect leader and set as game winner after K rounds
-exports.checkWinner = functions.firestore.document('/games/{gameId}/players/{playerId}')
+// Функция которая определяет, когда игра завершилась и кто победитель.
+exports.checkWinner = functions.firestore.document('/games/{gameId}')
     .onUpdate(async (snap, context) => {
 
-        const player = snap.after.data();
         const gameId = context.params.gameId;
+        const gameData = snap.after.data();
 
-        const gameDoc: FirebaseFirestore.DocumentData = await firestore.doc(`games/${gameId}`).get();
-        const gameData = gameDoc.data();
-
-        if (player.round < gameData.K) {
+        if (gameData.winner) {
           return;
         }
 
-        // Get leader
+        // Игра не заканчивается, пока игрок не сделал свои K-ходов.
+        if (gameData.turns > 0) {
+          return;
+        }
+
+        // Участник у которого больше очков, чем у других
         const leaderSnapshot = await firestore.collection(`games/${gameId}/players`)
-            .orderBy('round')
             .orderBy('points', 'desc')
-            .limit(1)
+            .limit(2)
             .get();
 
         const leader: FirebaseFirestore.DocumentData = await new Promise (resolve => {
-          leaderSnapshot.forEach(async function(doc) {
-            const leader = doc.data();
-            leader.id = doc.id;
-            resolve(leader);
+          let leader: FirebaseFirestore.DocumentData;
+          leaderSnapshot.forEach(function(doc) {
+            const data = doc.data();
+            if (leader) {
+              if (leader.points == data.points) {
+                resolve();
+              } else {
+                resolve(leader);
+              }
+            }
+            leader = {...data, id: doc.id};
           })
         });
 
-        // For winner detect Leader round must be same as current player round
-        if (leader.round < player.round) {
+        // Игра не заканчивается, пока у одного из участников больше очков, чем у других
+        if (!leader) {
           return;
         }
 
