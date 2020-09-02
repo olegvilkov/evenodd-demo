@@ -28,6 +28,12 @@ function JoinGamePage ({ gameId, user, joinGame }: PropsFromRedux & PropsFromNav
         setUsername(user.name);
     }, [user.name]);
 
+    const submit = (e: Event) => {
+        e.preventDefault();
+        e.stopPropagation();
+        joinGame(gameId, username);
+    }
+
     return (
         <>
         <GameNavbar
@@ -36,7 +42,7 @@ function JoinGamePage ({ gameId, user, joinGame }: PropsFromRedux & PropsFromNav
         />
         <Page loginScreen>
             
-            <List form>
+            <List form onSubmit={(e)=>submit(e)}>
                 <ListInput
                 label="Имя"
                 type="text"
@@ -46,7 +52,7 @@ function JoinGamePage ({ gameId, user, joinGame }: PropsFromRedux & PropsFromNav
                 />
             </List>
             <List>
-                <ListButton onClick={()=>{ joinGame(gameId, username) }}>Присоединиться</ListButton>
+                <ListButton onClick={(e)=>submit(e)}>Присоединиться</ListButton>
             </List>
         </Page>
         </>
