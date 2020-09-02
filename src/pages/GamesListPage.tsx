@@ -32,18 +32,23 @@ function GamesListPage ({ games=[], user, subscribeToGamesList, unSubscribeToGam
     }, []);
 
     const yourTurnGames = games.filter(game =>
-        !game.winner
-        && game.order.indexOf(uid)===0
-    );
+            !game.winner
+            && game.order.indexOf(uid)===0
+        );
     const yourGames = games.filter(game =>
-        !game.winner
-        && game.order.indexOf(uid)>0
-    );
+            !game.winner
+            && game.order.indexOf(uid)>0
+        );
+    const joinGames = games.filter(game => 
+            !game.winner
+            && game.order.indexOf(uid) < 0
+            && game.playersCount < game.playersForStart
+        );
     const startedGames = games.filter(game =>
-        !game.winner
-        && game.order.indexOf(uid) < 0
-        && game.playersCount == game.playersForStart
-    );
+            !game.winner
+            && game.order.indexOf(uid) < 0
+            && game.playersCount == game.playersForStart
+        );
     const finishedGames = games.filter(game => game.winner);
 
     return (
@@ -77,6 +82,15 @@ function GamesListPage ({ games=[], user, subscribeToGamesList, unSubscribeToGam
                         footer="Вы в игре"
                     />
             )}
+            {joinGames.map(
+                game =>
+                    <ListItem
+                        key={game.id}
+                        title={game.name}
+                        link={`/join/${game.id}`}
+                        after={`${game.playersCount}/${game.playersForStart}`}
+                    />
+            )}
             {startedGames.map(
                 game =>
                     <ListItem
@@ -84,7 +98,7 @@ function GamesListPage ({ games=[], user, subscribeToGamesList, unSubscribeToGam
                         title={game.name}
                         after="Уже началась"
                     />
-            )}            
+            )}  
         </List>
         {(!yourTurnGames.length && !yourGames.length) ?
             <BlockFooter>
