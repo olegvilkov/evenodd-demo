@@ -25,7 +25,10 @@ function CreateGamePage ({ currentUsername, createGame }: PropsFromRedux) {
     const [usernameIsValid, setUsernameIsValid] = useState( isEmpty(currentUsername) );
     const [usernameIsTouched, setUsernameIsTouched] = useState(false);
 
-    useEffect(()=>{ setUsername(currentUsername) }, [currentUsername])
+    useEffect(()=>{
+        setUsername(currentUsername);
+        validateUsername( currentUsername );
+    }, [currentUsername])
 
     const validateUsername = (username: string) => {
         setUsernameIsValid ( isEmpty(username) );
@@ -37,7 +40,9 @@ function CreateGamePage ({ currentUsername, createGame }: PropsFromRedux) {
         setUsernameIsTouched(true);
     }
     
-    const submit = () => {
+    const submit = (e: Event) => {
+        e.preventDefault();
+        e.stopPropagation();
         setUsernameIsTouched(true);
         if (playersForStartIsValid && usernameIsValid) {
             createGame(username, playersForStart);
@@ -49,7 +54,7 @@ function CreateGamePage ({ currentUsername, createGame }: PropsFromRedux) {
             <Navbar title="Создать игру" backLink={true}>
                 <Avatar />
             </Navbar>
-            <List form>
+            <List form onSubmit={(e)=>submit(e)}>
                 <ListInput
                 label="Количество игроков"
                 type="number"
@@ -63,7 +68,7 @@ function CreateGamePage ({ currentUsername, createGame }: PropsFromRedux) {
                 validate
                 />
             </List>
-            <List form>
+            <List form onSubmit={(e)=>submit(e)}>
                 <ListInput
                 label="Имя"
                 type="text"
@@ -76,7 +81,7 @@ function CreateGamePage ({ currentUsername, createGame }: PropsFromRedux) {
                 />
             </List>
             <List>
-                <ListButton onClick={()=>submit()}>Создать</ListButton>
+                <ListButton onClick={(e)=>submit(e)}>Создать</ListButton>
             </List>
         </Page>
     )
