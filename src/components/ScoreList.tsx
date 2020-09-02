@@ -20,7 +20,7 @@ type Props = { gameId: string } & PropsFromRedux;
 /**
  * Компонент "Текущие очки"
  * 
- * Выводит имена игроков и их текущие очки.
+ * Выводит имена игроков и их текущие очки в реальном времени.
  */
 function ScoreList ({gameId, user, players, subscribeToGamePlayers, unSubscribeFromGamePlayers}: Props) {
 
