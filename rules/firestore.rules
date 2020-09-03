@@ -50,31 +50,28 @@ service cloud.firestore {
       match /games/{game}/players/{player} {
         allow update: if true;
         allow read: if true;
-        allow create: if true;
-      }
-      
-      // function canCreatePlayer () {
-      // 	// let gameAfter = getAfter(/games/$(game));
-      // 	return
-      //   	// name must be not empty
-      //   	request.resource.data.name != ''
-      //     // test
-      //     // && gameAfter.playersCount > 0
-      //     // && request.resource.data.value == resource.data.value +1;
-      // }
+        allow create: if canCreatePlayer();
 
-      // If you update a city doc, you must also
-      // update the related country's last_updated field.
-      // match /cities/{city} {
-      //   allow write: if request.auth != null &&
-      //     getAfter(
-      //       /databases/$(database)/documents/countries/$(request.resource.data.country)
-      //     ).data.last_updated == request.time;
-      // }
-      
-      // function canUpdatePlayer (game, player) {}
-      
-      // let gameAfter = getAfter(/databases/$(database)/documents/games/$(game));
+        function canCreatePlayer () {
+          let uid = request.auth.uid;
+          let allowFields = ["name", "points"];
+          let gameBefore = get(/$(db())/games/$(game));
+          let gameAfter = getAfter(/$(db())/games/$(game));
+          let orderBefore = gameBefore.data.order;
+          let orderAfter = gameAfter.data.order;
+          let allowAffectGameFields = ["order"];
+
+          return
+            isSignedIn()
+            && request.resource.id == uid
+            && request.resource.data.points == 0
+            && request.resource.data.name != ''
+            && isCreateFieldsAllow(allowFields)
+            && orderBefore.concat([uid]) == orderAfter
+            && !orderBefore.hasAll([uid])
+            && gameAfter.data.diff(gameBefore.data).affectedKeys().hasOnly(allowAffectGameFields)
+        }
+      }
       
     }
 }
