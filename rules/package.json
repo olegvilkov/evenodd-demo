@@ -1,0 +1,33 @@
+{
+  "name": "rules",
+  "scripts": {
+    "lint": "tslint --project tsconfig.json",
+    "deploy": "firebase deploy --only firestore:rules",
+    "emulator": "firebase emulators:start --only firestore",
+    "test:mocha": "mocha --require ts-node/register --exit --extensions ts,tsx 'tests/*.ts'",
+    "test:ci": "firebase emulators:exec \"npm run test:mocha\"",
+    "test:watch": "npm run test:mocha -- --watch --watch-files firestore.rules,tests",
+    "test": "firebase emulators:exec \"npm run test:watch\""
+  },
+  "engines": {
+    "node": "10"
+  },
+  "main": "lib/index.js",
+  "dependencies": {
+    "@firebase/testing": "^0.20.11",
+    "firebase-admin": "^9.1.1",
+    "firebase-functions": "^3.11.0"
+  },
+  "devDependencies": {
+    "@firebase/firestore-types": "^1.12.1",
+    "@types/chai": "^4.2.12",
+    "@types/mocha": "^8.0.3",
+    "chai": "^4.2.0",
+    "firebase-functions-test": "^0.2.1",
+    "mocha": "^8.1.3",
+    "ts-node": "^9.0.0",
+    "tslint": "^5.12.0",
+    "typescript": "^3.8.0"
+  },
+  "private": true
+}

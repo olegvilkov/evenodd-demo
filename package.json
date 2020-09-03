@@ -31,9 +31,7 @@
     "deploy": "npm run build && firebase deploy --only hosting",
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test --testPathIgnorePatterns=server",
-    "test:server": "react-scripts test server",
-    "emulator": "firebase emulators:start --only firestore",
+    "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
