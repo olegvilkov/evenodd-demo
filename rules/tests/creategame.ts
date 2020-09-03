@@ -1,5 +1,4 @@
-import { setup, clearData, assertFails, assertSucceeds, cleanUp, ISetup } from "./setup";
-import { after } from "mocha";
+import { setup, clearData, assertFails, assertSucceeds, ISetup } from "./setup";
 
 const myId = "myId";
 const myAuth = { uid: myId };
@@ -52,10 +51,6 @@ describe("Security rules for Create Game", async () => {
 
     beforeEach(() => {
       clearData();
-    });
-
-    after( async () => {
-      await cleanUp();
     });
 
     it("Can create game with all required rules", function () {

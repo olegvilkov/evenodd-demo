@@ -59,5 +59,9 @@ export const cleanUp = async () => {
   await Promise.all(firebase.apps().map(app => app.delete()))
 };
 
+after( async () => {
+  await cleanUp();
+});
+
 export const assertSucceeds = firebase.assertSucceeds;
 export const assertFails = firebase.assertFails;
