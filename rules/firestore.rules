@@ -55,11 +55,16 @@ service cloud.firestore {
         function canCreatePlayer () {
           let uid = request.auth.uid;
           let allowFields = ["name", "points"];
-          let gameBefore = get(/$(db())/games/$(game));
-          let gameAfter = getAfter(/$(db())/games/$(game));
+          let gameDoc = /$(db())/games/$(game);
+          let gameBefore = get(gameDoc);
+          let gameAfter = getAfter(gameDoc);
+          let gameExists = exists(gameDoc);
           let orderBefore = gameBefore.data.order;
           let orderAfter = gameAfter.data.order;
           let allowAffectGameFields = ["order"];
+
+          // let t = debug("* DEBUG *");
+          // let tt = debug(exists(gameDoc));
 
           return
             isSignedIn()
@@ -67,9 +72,9 @@ service cloud.firestore {
             && request.resource.data.points == 0
             && request.resource.data.name != ''
             && isCreateFieldsAllow(allowFields)
-            && orderBefore.concat([uid]) == orderAfter
-            && !orderBefore.hasAll([uid])
-            && gameAfter.data.diff(gameBefore.data).affectedKeys().hasOnly(allowAffectGameFields)
+            && (!gameExists || orderBefore.concat([uid]) == orderAfter)
+            && (!gameExists || !orderBefore.hasAll([uid]))
+            && (!gameExists || gameAfter.data.diff(gameBefore.data).affectedKeys().hasOnly(allowAffectGameFields))
         }
       }
       

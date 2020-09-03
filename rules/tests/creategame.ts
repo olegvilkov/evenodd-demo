@@ -8,10 +8,14 @@ const otherId = "otherId";
 const game = {
   name: 'Test Game',
   playersForStart: 3,
-  order: [myId]
+  order: [myId],
+  // turns: 21,
 };
 
-const player = {};
+const player = {
+  name: "Test Name",
+  points: 0,
+};
 
 const gameSetup = async (options?: ISetup) => {
   const db = await setup(options);
