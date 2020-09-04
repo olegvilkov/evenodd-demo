@@ -108,7 +108,6 @@ function GamesListPage ({ games=[], user }: PropsFromRedux & Props) {
                         title={game.name}
                         link={`/join/${game.id}`}
                         after={`${game.playersCount}/${game.playersForStart}`}
-                        footer="Вы в игре"
                     />
             )}
             {startedGames.map(
