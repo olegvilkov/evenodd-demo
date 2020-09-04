@@ -27,7 +27,7 @@ function* createGame({username, playersForStart}: ICreateGame) {
 
   const game: IStoreGame = {
     playersForStart,
-    name: `Создатель игры: ${username}`,
+    name: `Игра ${username}`,
     turns,
     order: []
   };
