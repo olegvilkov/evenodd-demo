@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import { makeAnswer } from 'redux/sagas/answer/actions';
-import { EvenOdd } from 'database/gameanswer';
+import { EvenOdd } from 'database/enums';
 
 import { BlockHeader, Block, Button, List, ListItem, Stepper } from 'framework7-react';
 

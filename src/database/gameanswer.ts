@@ -1,15 +1,5 @@
 import { db, dbHelper } from 'utils/firebase';
-
-export enum EvenOdd {
-    Even,
-    Odd
-}
-
-export enum AnswerMode {
-    WaitForEvenOdd,
-    WaitForNumber,
-    Finish
-}
+import { EvenOdd, AnswerMode } from './enums';
 
 export interface InsideTransaction {
     (transaction: firebase.firestore.Transaction, doc: firebase.firestore.DocumentData | undefined): void
@@ -18,8 +8,8 @@ export interface InsideTransaction {
 const increseByOne = dbHelper.FieldValue.increment(1);
 
 export function setGameAnswerEvenOdd (gameId: string, evenodd: EvenOdd) {
-    return db.doc(`gameanswers/${gameId}`).set({
-        evenodd: evenodd,
+    return db.doc(`gameanswer/${gameId}`).set({
+        evenodd,
         mode: AnswerMode.WaitForNumber,
     }, {merge: true});
 }
@@ -28,7 +18,7 @@ export function runGameAnswerTransaction (
     gameId: string,
     insideTransaction: InsideTransaction
 ) {
-    const answerDocRef = db.doc(`gameanswers/${gameId}`);
+    const answerDocRef = db.doc(`gameanswer/${gameId}`);
   
     return db.runTransaction(function(transaction) {
       // This code may get re-run multiple times if there are conflicts.
@@ -40,7 +30,7 @@ export function runGameAnswerTransaction (
 }
 
 export function updateGameAnswerNumber (gameId: string, number: number, transaction: firebase.firestore.Transaction) {
-    const answerDocRef = db.doc(`gameanswers/${gameId}`);
+    const answerDocRef = db.doc(`gameanswer/${gameId}`);
     transaction.update(answerDocRef, {
         number,
         mode: AnswerMode.WaitForEvenOdd,
