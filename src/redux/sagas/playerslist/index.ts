@@ -1,7 +1,7 @@
 
 import { PLAYERS_UNSUBSCRIBE, PLAYERS_SUBSCRIBE } from 'redux/actionTypes';
 import { addAppError } from 'redux/reducers/errors/actions';
-import { addPlayer, changePlayer } from 'redux/reducers/playerlist/actions';
+import { addPlayer, changePlayer, clearPlayers } from 'redux/reducers/playerlist/actions';
 import { take, put, takeLatest } from 'redux-saga/effects';
 import { eventChannel, EventChannel } from 'redux-saga';
 import { ISubscribeGamePlayers } from './types';
@@ -43,6 +43,7 @@ function* subscribeToGamePlayers ({gameId}: ISubscribeGamePlayers) {
 function* unSubscribeFromGamePlayers() {
   if (channel) {
     channel.close();
+    yield put ( clearPlayers() );
   }
 }
 

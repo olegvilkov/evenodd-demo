@@ -1,4 +1,4 @@
-import { PLAYERS_ADD_PLAYER, PLAYERS_CHANGE_PLAYER } from '../../actionTypes';
+import { PLAYERS_ADD_PLAYER, PLAYERS_CHANGE_PLAYER, PLAYERS_CLEAR } from '../../actionTypes';
 import { ActionTypes, IPlayerList } from './types';
 
 const initialState: IPlayerList = [];
@@ -14,6 +14,9 @@ export default function playersReducer (state = initialState, action: ActionType
 
     case PLAYERS_CHANGE_PLAYER:
       return state.map(player => player.id == action.payload.id ? action.payload : player);
+
+    case PLAYERS_CLEAR:
+      return [];
         
     default:
       return state;

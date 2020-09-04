@@ -1,4 +1,4 @@
-import { PLAYERS_ADD_PLAYER, PLAYERS_CHANGE_PLAYER } from 'redux/actionTypes';
+import { PLAYERS_ADD_PLAYER, PLAYERS_CHANGE_PLAYER, PLAYERS_CLEAR } from 'redux/actionTypes';
 
 export interface IPlayer {
     id?: string
@@ -22,4 +22,8 @@ export interface IAddPlayer {
     payload: IPlayer
 }
 
-export type ActionTypes = IChangePlayer | IAddPlayer;
+export interface IClearPlayers {
+    type: typeof PLAYERS_CLEAR
+}
+
+export type ActionTypes = IChangePlayer | IAddPlayer | IClearPlayers;
