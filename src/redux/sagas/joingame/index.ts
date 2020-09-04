@@ -14,9 +14,7 @@ import * as DB from 'database';
  */
 export const playerData = (username: string) => ({
   name: username,
-  order: 0,
   points: 0,
-  round: 0,
 });
 
 /**
