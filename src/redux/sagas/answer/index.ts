@@ -30,9 +30,12 @@ function* makeAnswer({evenodd, number}: IMakeAnswer) {
     
     yield call(DB.runGameAnswerTransaction, gameId, (transaction, answerDoc) => {
       const prevNumber = (answerDoc as IMakeAnswer).number;
-      const isAnswerCorrect = prevNumber % 2 && evenodd == DB.EvenOdd.Odd;
+      const isAnswerCorrect = (
+        prevNumber % 2 === 1 && evenodd == DB.EvenOdd.Odd
+        || prevNumber % 2 === 0 && evenodd == DB.EvenOdd.Even
+      );
 
-      if (prevNumber && isAnswerCorrect) {
+      if (prevNumber !== null && isAnswerCorrect) {
         DB.increaseGamePlayerPoints(gameId, uid, transaction);
       }
 
