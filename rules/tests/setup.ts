@@ -1,6 +1,5 @@
 import * as firebase from '@firebase/testing'
 import * as fs from 'fs';
-import { AppOptions } from '@firebase/testing/dist/src/api';
 
 const projectId = "evenodd-demo";
 
@@ -12,11 +11,16 @@ const admin = firebase.initializeAdminApp({
 // Get the db linked to the new firebase app that we creted
 const adminDb = admin.firestore();
 
-interface IData {
+export interface IData {
   [key: string]: IData;
 }
 
-export interface ISetup extends AppOptions {
+export interface IAuth {
+  uid: string
+}
+
+export interface ISetup {
+  auth?: IAuth
   data?: IData
 }
 

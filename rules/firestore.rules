@@ -19,14 +19,11 @@ service cloud.firestore {
           reqData.diff(resource.data).affectedKeys().hasOnly(allowFields);
       }
 
-      // let t = debug("* DEBUG *");
-      // let tt = debug(exists(gameDoc));
-
       match /{document=**} {
         allow read, write: if false;
       }
   
-      // A write rule can be divided into create, update, and delete rules
+// game -----------------------------------------
       match /games/{game} {
         allow update: if canUpdateGame();
         allow read: if true;
@@ -50,7 +47,32 @@ service cloud.firestore {
         function canUpdateGame () {
           return 
             isSignedIn()
-            && isJoinGame()
+            && (isJoinGame() || isAnswerNumber())
+        }
+
+        function isAnswerNumber () {
+          let allowFields = ["order", "turns"];
+
+          return
+            checkAffectedFields(allowFields)
+            && isAnswerWriteNumber(game)
+            && isOrderChangedToNext()
+            && isTurnsDecreasedByOne()
+        }
+
+        function isOrderChangedToNext() {
+          let uid = request.auth.uid;
+          let prevOrder = resource.data.order;
+          let nextOrder = request.resource.data.order;
+          
+          return prevOrder.removeAll([uid]).concat([uid]).toSet() == nextOrder.toSet();
+        }
+
+        function isTurnsDecreasedByOne() {
+          let prevTurns = resource.data.turns;
+          let nextTurns = request.resource.data.turns;
+          
+          return nextTurns == prevTurns - 1;
         }
 
         function isPlayerAdded () {
@@ -74,9 +96,9 @@ service cloud.firestore {
         }
       }
       
-      // A write rule can be divided into create, update, and delete rules
+// player --------------------------------------
       match /games/{game}/players/{player} {
-        allow update: if true;
+        allow update: if canUpdatePlayer();
         allow read: if true;
         allow create: if canCreatePlayer();
 
@@ -91,6 +113,100 @@ service cloud.firestore {
             && request.resource.data.name != ''
             && checkAffectedFields(allowFields)
         }
+
+        function canUpdatePlayer() {
+          return
+            isSignedIn()
+            && canUpPoints()
+        }
+
+        function canUpPoints() {
+          let allowFields = ["points"];
+
+          return
+            checkAffectedFields(allowFields)
+            && request.resource.data.points == (resource.data.points + 1)
+            && isAnswerWriteNumber(game)
+            && isAnswerCorrect()
+        }
+
+        function isAnswerCorrect() {
+          let answer = get(/$(db())/gameanswer/$(game)).data;
+
+          return
+            (answer.number % 2 == 1 && answer.evenodd == Odd())
+            || (answer.number % 2 == 0 && answer.evenodd == Even())
+        }
+
+      }
+
+// gameanswer ------------------
+      match /gameanswer/{game} {
+        allow write: if canWriteGameAnswer();
+        allow read: if canReadGameAnswer();
+
+        function canWriteGameAnswer() {
+          return
+            isSignedIn()
+            && isUserTurn()
+            && (isEvenOddWrite() || isNumberWrite() )
+        }
+
+        function isUserTurn () {
+          return get(/$(db())/games/$(game)).data.order[0] == request.auth.uid;
+        }
+
+        function isNumberWrite() {
+          let allowFields = ["number", "mode"];
+
+          return
+              resource.data.mode == WaitForNumber()
+              && checkAffectedFields(allowFields)
+              && request.resource.data.mode == WaitForEvenOdd()
+        }
+
+        function isEvenOddWrite() {
+            let allowFields = ["evenodd", "mode"];
+
+            return
+              (
+                resource == null
+                || resource.data.mode == WaitForEvenOdd()
+              )
+              && checkAffectedFields(allowFields)
+              && request.resource.data.mode == WaitForNumber()
+        }
+
+        function canReadGameAnswer() {
+          return resource.data.mode == WaitForNumber();
+        }
+      }
+
+      function isAnswerWriteNumber(game) {
+        let answerDoc = /$(db())/gameanswer/$(game);
+        let modeBefore = get(answerDoc).data.mode;
+        let modeAfter = getAfter(answerDoc).data.mode;
+
+        return (
+            modeBefore == WaitForNumber()
+            && modeAfter == WaitForEvenOdd()
+          )
+      }
+
+      function WaitForEvenOdd() {
+        return 0;
+      }
+
+      function WaitForNumber() {
+          return 1;
+      }
+
+      function Odd() {
+        return 1;
+      }
+
+      function Even() {
+        return 0;
       }
       
     }
