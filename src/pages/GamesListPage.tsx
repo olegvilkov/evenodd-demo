@@ -70,6 +70,7 @@ function GamesListPage ({ games=[], user, subscribeToGamesList, unSubscribeToGam
                         title={game.name}
                         link={`/game/${game.id}`}
                         after="Ваш ход"
+                        footer="Вы в игре"
                     />
             )}
             {yourGames.map(
@@ -78,7 +79,7 @@ function GamesListPage ({ games=[], user, subscribeToGamesList, unSubscribeToGam
                         key={game.id}
                         title={game.name}
                         link={`/game/${game.id}`}
-                        after={`${game.playersCount}/${game.playersForStart}`}
+                        after="Ожидание хода"
                         footer="Вы в игре"
                     />
             )}
