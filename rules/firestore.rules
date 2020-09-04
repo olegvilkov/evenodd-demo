@@ -34,7 +34,7 @@ service cloud.firestore {
 
         function canCreateGame () {
           let uid = request.auth.uid;
-          let allowFields = ["name", "playersForStart", "order"];
+          let allowFields = ["name", "playersForStart", "order", "turns"];
           let player = getAfter(/$(db())/games/$(game)/players/$(uid));
 
           return
@@ -56,7 +56,7 @@ service cloud.firestore {
         function isPlayerAdded () {
           let uid = request.auth.uid;
           let gameDoc = /$(db())/games/$(game)/players/$(uid);
-          
+
           return !exists(gameDoc) && getAfter(gameDoc).id == uid;
         }
 

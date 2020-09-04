@@ -8,7 +8,7 @@ const game = {
   name: 'Test Game',
   playersForStart: 3,
   order: [myId],
-  // turns: 21,
+  turns: 21,
 };
 
 const player = {
