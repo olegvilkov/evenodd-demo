@@ -1,4 +1,4 @@
-import { GAMES_LIST_CHANGE_GAME, GAMES_LIST_ADD_GAME, GAMES_LIST_DELETE_GAME, GAMES_LIST_CLEAR, GAMES_LIST_LOADING } from '../../actionTypes';
+import { GAMES_LIST_CHANGE_GAME, GAMES_LIST_ADD_GAME, GAMES_LIST_DELETE_GAME, GAMES_LIST_CLEAR, GAMES_LIST_LOADING_START, GAMES_LIST_LOADING_STOP } from '../../actionTypes';
 import { ActionTypes, IGameList } from './types';
 
 const initialState: IGameList = {
@@ -41,10 +41,16 @@ export default function gamesListReducer (state = initialState, action: ActionTy
         list: []
       };
 
-    case GAMES_LIST_LOADING:
+    case GAMES_LIST_LOADING_START:
       return {
         ...state,
-        isLoading: action.payload
+        isLoading: true
+      };
+
+    case GAMES_LIST_LOADING_STOP:
+      return {
+        ...state,
+        isLoading: false
       };
 
     default:

@@ -1,4 +1,4 @@
-import { GAMES_LIST_CHANGE_GAME, GAMES_LIST_ADD_GAME, GAMES_LIST_DELETE_GAME, GAMES_LIST_CLEAR, GAMES_LIST_LOADING } from 'redux/actionTypes';
+import { GAMES_LIST_CHANGE_GAME, GAMES_LIST_ADD_GAME, GAMES_LIST_DELETE_GAME, GAMES_LIST_CLEAR, GAMES_LIST_LOADING_START, GAMES_LIST_LOADING_STOP } from 'redux/actionTypes';
 import { IGame } from '../currentgame/types';
 
 export type IGameList = {
@@ -25,14 +25,16 @@ export interface IGameListClear {
     type: typeof GAMES_LIST_CLEAR
 }
 
-export interface IGameListLoading {
-    type: typeof GAMES_LIST_LOADING
-    payload: boolean
+export interface IGameListLoadingStart {
+    type: typeof GAMES_LIST_LOADING_START
 }
 
+export interface IGameListLoadingStop {
+    type: typeof GAMES_LIST_LOADING_STOP
+}
 
 export interface IGamesListState {
     gameslist: IGameList
 }
 
-export type ActionTypes = IGameListAdd | IGameListChange | IGameListDelete | IGameListClear | IGameListLoading;
+export type ActionTypes = IGameListAdd | IGameListChange | IGameListDelete | IGameListClear | IGameListLoadingStart | IGameListLoadingStop;
