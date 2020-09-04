@@ -12,6 +12,6 @@ export const selectIsWaitTurn = createSelector(
         if (!game.order) {
             return false;
         }
-        return game.order[0] === user.uid;
+        return game.order[0] !== user.uid;
     }
   )
