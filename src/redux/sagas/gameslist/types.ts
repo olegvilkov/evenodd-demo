@@ -6,8 +6,8 @@ export interface IGamesListenerAction {
 }
 
 export interface IGamesListAction {
-    type: string
-    payload: IGame
+    type: "ready" | "added" | "added" | "removed" | "modified"
+    payload?: IGame
 }
 
 export type ChangeGamesListType = (action: IGamesListAction) => void;

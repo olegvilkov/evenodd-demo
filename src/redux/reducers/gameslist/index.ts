@@ -1,7 +1,10 @@
-import { GAMES_LIST_CHANGE_GAME, GAMES_LIST_ADD_GAME, GAMES_LIST_DELETE_GAME, GAMES_LIST_CLEAR } from '../../actionTypes';
+import { GAMES_LIST_CHANGE_GAME, GAMES_LIST_ADD_GAME, GAMES_LIST_DELETE_GAME, GAMES_LIST_CLEAR, GAMES_LIST_LOADING } from '../../actionTypes';
 import { ActionTypes, IGameList } from './types';
 
-const initialState: IGameList = [];
+const initialState: IGameList = {
+  isLoading: false,
+  list: []
+};
 
 /**
  * Обработка событий списка игр
@@ -14,20 +17,35 @@ export default function gamesListReducer (state = initialState, action: ActionTy
         ...action.payload,
         playersCount: action.payload.order.length
       }
-      return [...state, game];
+      return {...state, list: [...state.list, game]};
 
     case GAMES_LIST_CHANGE_GAME:
       const update = {
         ...action.payload,
         playersCount: action.payload.order.length}
       ;
-      return state.map(game => game.id == action.payload.id ? update : game);
+      return {
+        ...state,
+        list: state.list.map(game => game.id == action.payload.id ? update : game)
+      };
 
     case GAMES_LIST_DELETE_GAME:
-      return state.filter(game => game.id != action.payload.id);
+      return {
+        ...state,
+        list: state.list.filter(game => game.id != action.payload.id)
+      };
     
     case GAMES_LIST_CLEAR:
-      return [];
+      return {
+        ...state,
+        list: []
+      };
+
+    case GAMES_LIST_LOADING:
+      return {
+        ...state,
+        isLoading: action.payload
+      };
 
     default:
       return state;

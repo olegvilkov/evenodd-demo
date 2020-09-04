@@ -37,6 +37,7 @@ export function listenGamesCollection ( callbackfn: ChangeGamesListType ) {
                 const payload = {...data, id} as IGame;
                 callbackfn({type, payload});
             });
+            callbackfn({type: "ready"});
         });
 }
 
