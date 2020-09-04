@@ -28,17 +28,18 @@ exports.checkWinner = functions.firestore.document('/games/{gameId}')
             .get();
 
         const leader: FirebaseFirestore.DocumentData = await new Promise (resolve => {
-          let leader: FirebaseFirestore.DocumentData;
+          let firstResult: FirebaseFirestore.DocumentData;
           leaderSnapshot.forEach(function(doc) {
             const data = doc.data();
-            if (leader) {
-              if (leader.points == data.points) {
+            if (firstResult) {
+              // Игра идет до тех пор пока у одного из участников не будет больше очков, чем у других.
+              if (firstResult.points == data.points) {
                 resolve();
               } else {
-                resolve(leader);
+                resolve(firstResult);
               }
             }
-            leader = {...data, id: doc.id};
+            firstResult = {...data, id: doc.id};
           })
         });
 
