@@ -10,16 +10,17 @@ service cloud.firestore {
         return request.auth != null;
       }
 
-      // function isFieldsAllow(allowFields) {
-      //   let temp = debug("** affectedKeys **");
-      //   let affectedKeys = debug(request.resource.data.diff(resource.data).affectedKeys());
-      //   let temp2 = debug("** allowFields **");
-      //   return affectedKeys.hasOnly(debug(allowFields));
-      // }
+      function checkAffectedFields(allowFields) {
+        let reqData = request.resource.data;
 
-      function isCreateFieldsAllow(allowFields) {
-        return request.resource.data.keys().hasOnly(allowFields);
+        return resource == null ?
+          reqData.keys().hasOnly(allowFields)
+          :
+          reqData.diff(resource.data).affectedKeys().hasOnly(allowFields);
       }
+
+      // let t = debug("* DEBUG *");
+      // let tt = debug(exists(gameDoc));
 
       match /{document=**} {
         allow read, write: if false;
@@ -27,7 +28,7 @@ service cloud.firestore {
   
       // A write rule can be divided into create, update, and delete rules
       match /games/{game} {
-        allow update: if true;
+        allow update: if canUpdateGame();
         allow read: if true;
         allow create: if canCreateGame();
 
@@ -38,11 +39,38 @@ service cloud.firestore {
 
           return
             isSignedIn()
-            && isCreateFieldsAllow(allowFields)
+            && isPlayerAdded()
+            && checkAffectedFields(allowFields)
             && request.resource.data.name != ''
             && request.resource.data.playersForStart >= 2
             && request.resource.data.order.hasOnly([uid])
             && player.id == uid
+        }
+
+        function canUpdateGame () {
+          return 
+            isSignedIn()
+            && isJoinGame()
+        }
+
+        function isPlayerAdded () {
+          let uid = request.auth.uid;
+          let gameDoc = /$(db())/games/$(game)/players/$(uid);
+          
+          return !exists(gameDoc) && getAfter(gameDoc).id == uid;
+        }
+
+        function isJoinGame () {
+          let uid = request.auth.uid;
+          let allowFields = ["order"];
+          let orderBefore = resource.data.order;
+          let orderAfter = request.resource.data.order;
+
+          return
+            isPlayerAdded()
+            && checkAffectedFields(allowFields)
+            && orderBefore.concat([uid]) == orderAfter
+            && !orderBefore.hasAll([uid])
         }
       }
       
@@ -55,26 +83,13 @@ service cloud.firestore {
         function canCreatePlayer () {
           let uid = request.auth.uid;
           let allowFields = ["name", "points"];
-          let gameDoc = /$(db())/games/$(game);
-          let gameBefore = get(gameDoc);
-          let gameAfter = getAfter(gameDoc);
-          let gameExists = exists(gameDoc);
-          let orderBefore = gameBefore.data.order;
-          let orderAfter = gameAfter.data.order;
-          let allowAffectGameFields = ["order"];
-
-          // let t = debug("* DEBUG *");
-          // let tt = debug(exists(gameDoc));
 
           return
             isSignedIn()
             && request.resource.id == uid
             && request.resource.data.points == 0
             && request.resource.data.name != ''
-            && isCreateFieldsAllow(allowFields)
-            && (!gameExists || orderBefore.concat([uid]) == orderAfter)
-            && (!gameExists || !orderBefore.hasAll([uid]))
-            && (!gameExists || gameAfter.data.diff(gameBefore.data).affectedKeys().hasOnly(allowAffectGameFields))
+            && checkAffectedFields(allowFields)
         }
       }
       
