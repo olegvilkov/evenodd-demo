@@ -8,6 +8,7 @@ import { IUserState } from 'redux/reducers/user/types';
 
 import { Page, Toolbar, Link, List, ListItem, Navbar, BlockTitle, BlockFooter } from 'framework7-react';
 import Avatar from 'components/Avatar';
+import { IGame } from 'redux/reducers/currentgame/types';
 
 const mapState = (state: IGamesListState & IUserState) => ({
     games: selectGamesList(state),
@@ -31,25 +32,43 @@ function GamesListPage ({ games=[], user, subscribeToGamesList, unSubscribeToGam
         return ()=>{ unSubscribeToGamesList() }
     }, []);
 
-    const yourTurnGames = games.filter(game =>
-            !game.winner
-            && game.order.indexOf(uid)===0
-        );
-    const yourGames = games.filter(game =>
-            !game.winner
-            && game.order.indexOf(uid)>0
-        );
-    const joinGames = games.filter(game => 
-            !game.winner
-            && game.order.indexOf(uid) < 0
-            && game.playersCount < game.playersForStart
-        );
-    const startedGames = games.filter(game =>
-            !game.winner
-            && game.order.indexOf(uid) < 0
-            && game.playersCount == game.playersForStart
-        );
-    const finishedGames = games.filter(game => game.winner);
+    const yourTurnGames: Array<IGame> = [];;
+    const yourGamesWaitTurn: Array<IGame> = [];;
+    const yourGamesWaitPlayers: Array<IGame> = [];
+    const canJoinGames: Array<IGame> = [];
+    const startedGames: Array<IGame> = [];
+    const finishedGames: Array<IGame> = [];
+
+    games.map(game => {
+        if (game.winner) {
+            return finishedGames.push(game)
+        }
+
+        const item: ListItem.Props = {
+            title: game.name
+        }
+
+        const isGameStarted = game.playersCount == game.playersForStart;
+        const orderIndex = game.order.indexOf(uid);
+        const isUserInGame = orderIndex >= 0;
+        const isUserTurn = orderIndex == 0;
+
+        if (isGameStarted) {
+            if (isUserTurn) {               
+               yourTurnGames.push(game);
+            } else if (isUserInGame) {
+               yourGamesWaitTurn.push(game);
+            } else {
+               startedGames.push(game);
+            }
+        } else {
+            if (isUserInGame) {
+                yourGamesWaitPlayers.push(game);
+            } else {
+                canJoinGames.push(game);
+            }
+        }
+    });
 
     return (
        <Page>
@@ -73,7 +92,7 @@ function GamesListPage ({ games=[], user, subscribeToGamesList, unSubscribeToGam
                         footer="Вы в игре"
                     />
             )}
-            {yourGames.map(
+            {yourGamesWaitTurn.map(
                 game =>
                     <ListItem
                         key={game.id}
@@ -83,13 +102,24 @@ function GamesListPage ({ games=[], user, subscribeToGamesList, unSubscribeToGam
                         footer="Вы в игре"
                     />
             )}
-            {joinGames.map(
+            {yourGamesWaitPlayers.map(
+                game =>
+                    <ListItem
+                        key={game.id}
+                        title={game.name}
+                        link={`/game/${game.id}`}
+                        after={`${game.playersCount}/${game.playersForStart}`}
+                        footer="Вы в игре"
+                    />
+            )}
+            {canJoinGames.map(
                 game =>
                     <ListItem
                         key={game.id}
                         title={game.name}
                         link={`/join/${game.id}`}
                         after={`${game.playersCount}/${game.playersForStart}`}
+                        footer="Вы в игре"
                     />
             )}
             {startedGames.map(
@@ -101,7 +131,7 @@ function GamesListPage ({ games=[], user, subscribeToGamesList, unSubscribeToGam
                     />
             )}  
         </List>
-        {(!yourTurnGames.length && !yourGames.length) ?
+        {(!yourTurnGames.length && !yourGamesWaitPlayers.length && !yourGamesWaitTurn.length && !canJoinGames.length) ?
             <BlockFooter>
                 <p>Подождите пока кто-то создаст игру или <a href="/create">создайте свою</a>.</p>
             </BlockFooter>
