@@ -15,7 +15,7 @@
     "test": "npm run test:mocha -- --watch --watch-files lib,test"
   },
   "engines": {
-    "node": "8"
+    "node": "10"
   },
   "main": "lib/index.js",
   "dependencies": {

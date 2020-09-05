@@ -1,7 +1,6 @@
-import { db, dbHelper } from 'utils/firebase';
+import { db } from 'utils/firebase';
 import { IGame, IStoreGame } from 'redux/reducers/currentgame/types';
 import { ChangeGamesListType } from 'redux/sagas/gameslist/types';
-import { ChangeGameCallbackType } from 'redux/sagas/currentgame/types';
 import { IPlayer } from 'redux/reducers/playerlist/types';
 import { addGamePlayerInTransaction } from './players';
 
@@ -39,38 +38,4 @@ export function listenGamesCollection ( callbackfn: ChangeGamesListType ) {
             });
             callbackfn({type: "ready"});
         });
-}
-
-/**
- * Listen game doc for realtime updates
- * @returns unsubscribe
- */
-export function listenGame ( gameId: string, callbackfn: ChangeGameCallbackType ) {
-    return db.doc(`games/${gameId}`)
-      .onSnapshot(function(doc) {
-        const id = doc.id;
-        const data = doc.data();
-        const payload = {...data, id} as IGame;
-        callbackfn(payload);
-      });
-  }
-
-/**
- * Уменьшает количество ходов в игре до окончания игры на 1
- */
-export function decreaseGameTurns (gameId: string, transaction: firebase.firestore.Transaction) {
-    const gameDocRef = db.doc(`games/${gameId}`);
-    transaction.update(gameDocRef, {
-        turns: dbHelper.FieldValue.increment(-1)
-    });
-}
-
-/**
- * Обновляет порядок ходов игроков вигре
- */
-export function updateGameOrder (gameId: string, order: Array<string>, transaction: firebase.firestore.Transaction) {
-    const gameDocRef = db.doc(`games/${gameId}`);
-    transaction.update(gameDocRef, {
-        order,
-    });
 }

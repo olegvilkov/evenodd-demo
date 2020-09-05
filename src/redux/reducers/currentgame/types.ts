@@ -8,6 +8,7 @@ export interface IStoreGame {
     turns: number
     order: Array<string>
     winner?: string
+    leader?: string
 }
 
 export interface IGame extends IStoreGame{

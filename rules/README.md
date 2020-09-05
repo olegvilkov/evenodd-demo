@@ -9,6 +9,7 @@ Firestore Security Rules являются частью гарантии чест
 * games/{game} - Игры.
     - `name` - Название игры.
     - `order` - Порядок ходов игроков.
+    - `leader` - Текущий лидер по очкам.
     - `winner` - Победитель игры.
     - `turns` - Кол-во ходов до окончания игры.
 * games/{game}/players/{player} - Игроки.

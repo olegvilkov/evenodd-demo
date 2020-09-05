@@ -5,7 +5,11 @@ import { IMakeAnswer } from './types';
 import { loadingOn, loadingOff } from 'redux/reducers/loading/actions';
 import { selectCurrentGame } from 'redux/reducers/currentgame/selector';
 import { selectUser } from 'redux/reducers/user/selector';
+import { selectPlayers } from 'redux/reducers/playerlist/selector';
+import { IPlayerList } from 'redux/reducers/playerlist/types';
+import { isGameEnd, isUserGameLeader} from './helper';
 import * as DB from 'database';
+import { IUser } from 'redux/reducers/user/types';
 
 /**
  * Saga wich
@@ -15,33 +19,49 @@ import * as DB from 'database';
  * @param param0 
  */
 function* makeAnswer({evenodd, number}: IMakeAnswer) {
-  const {id: gameId, order} = yield select( selectCurrentGame );
-  const {uid} = yield select( selectUser );
-  const nextOrder = [...order];
+  const game = yield select( selectCurrentGame );
+  const user: IUser = yield select( selectUser );
+  const players: IPlayerList = yield select ( selectPlayers );
+  const nextOrder = [...game.order];
 
   // Текущий игрок уходит в конец очереди
   nextOrder.push(nextOrder.shift());
 
   yield put( loadingOn() );
   
-  yield call(DB.setGameAnswerEvenOdd, gameId, evenodd);
+  try {
+    yield call(DB.setGameAnswerEvenOdd, game.id, evenodd);
+  } catch (e) {
+    yield put( addAppError(e) );
+  }
 
   try {
     
-    yield call(DB.runGameAnswerTransaction, gameId, (transaction, answerDoc) => {
+    yield call(DB.runGameAnswerTransaction, game.id, (transaction, answerDoc) => {
       const prevNumber = (answerDoc as IMakeAnswer).number;
       const isAnswerCorrect = (
-        prevNumber % 2 === 1 && evenodd == DB.EvenOdd.Odd
-        || prevNumber % 2 === 0 && evenodd == DB.EvenOdd.Even
+        (prevNumber % 2 === 1 && evenodd == DB.EvenOdd.Odd
+          || prevNumber % 2 === 0 && evenodd == DB.EvenOdd.Even
+        ) && prevNumber !== null
       );
 
-      if (prevNumber !== null && isAnswerCorrect) {
-        DB.increaseGamePlayerPoints(gameId, uid, transaction);
+      if (isAnswerCorrect) {
+        DB.increaseGamePlayerPoints(game.id, user.uid, transaction);
       }
 
-      DB.updateGameAnswerNumber(gameId, number, transaction);
-      DB.decreaseGameTurns(gameId, transaction);
-      DB.updateGameOrder(gameId, nextOrder, transaction);
+      DB.updateGameAnswerNumber(game.id, number, transaction);
+      DB.decreaseGameTurns(game.id, transaction);
+      DB.updateGameOrder(game.id, nextOrder, transaction);
+
+      if (isUserGameLeader(user, game, players, isAnswerCorrect)) {
+
+        DB.setGameLeader(game.id, user.uid, transaction);
+
+        if (isGameEnd(game)) {
+          DB.setGameWinner(game.id, user.name, transaction);
+        }
+      }
+
     });
 
   } catch (e) {

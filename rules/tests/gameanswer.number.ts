@@ -1,24 +1,36 @@
 import { setup, clearData, assertFails, assertSucceeds, IAuth, IData } from "./setup";
 import { AnswerMode, EvenOdd } from '../../src/database/enums';
 
-const myId = "myId";
-const otherId = "otherId";
-const gameId = "gameId";
-const myAuth = {uid: myId};
-const game: Object = {
+export const myId = "myId";
+
+export const otherId = "otherId";
+
+export const gameId = "gameId";
+
+export const myAuth = {uid: myId};
+
+export const game: Object = {
     name: 'Test Game',
     playersForStart: 2,
     order: [myId, otherId],
     turns: 21,
 };
-const player: Object = {
-    name: "Test Name",
+
+export const player: Object = {
+    name: "My Name",
     points: 0
 };
-const playerUpdate = {
+
+export const other: Object = {
+    name: "Other Name",
+    points: 0
+};
+
+export const playerUpdate = {
     points: 1
 };
-const answerEvenOdd = {
+
+export const answerEvenOdd = {
     evenodd: EvenOdd.Even,
     mode: AnswerMode.WaitForNumber
 }
@@ -30,9 +42,10 @@ interface INumberAnswer {
     playerUpdate?: Object
     setupAnswer: Object
     setupGame: Object
+    setupOther: Object
 }
 
-const succeedsNumberAnswerConfig:INumberAnswer = {
+export const succeedsNumberAnswerConfig:INumberAnswer = {
     answer: {
         number: 42,
         mode: AnswerMode.WaitForEvenOdd
@@ -44,11 +57,13 @@ const succeedsNumberAnswerConfig:INumberAnswer = {
     },
     setupAnswer: answerEvenOdd,
     setupGame: game,
+    setupOther: other,
 };
 
-const makeNumberAnswer = async ({answer, auth, setupGame, setupAnswer, gameUpdate, playerUpdate}: INumberAnswer) => {
+export const makeNumberAnswer = async ({answer, auth, setupGame, setupAnswer, gameUpdate, playerUpdate, setupOther}: INumberAnswer) => {
     
     const data = {
+        [`games/${gameId}/players/${otherId}`]: setupOther,
         [`games/${gameId}/players/${myId}`]: player,
         [`games/${gameId}`]: setupGame,
         [`gameanswer/${gameId}`]: setupAnswer,
