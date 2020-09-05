@@ -31,7 +31,7 @@ exports.checkWinner = functions.firestore.document('/games/{gameId}')
 
         leaderSnapshot.forEach(function(doc) {
           const data = doc.data();
-          leaderPlayers.push({...data, id: doc.id});
+          leaderPlayers.push(data);
         })
 
         // Игра не заканчивается, пока у одного из участников больше очков, чем у других
@@ -41,6 +41,6 @@ exports.checkWinner = functions.firestore.document('/games/{gameId}')
 
         // Must return a Promise
         return firestore.doc(`games/${gameId}`).update({
-            winner: leaderPlayers[0].id,
+            winner: leaderPlayers[0].name,
         })
     });

@@ -25,7 +25,7 @@ describe("Функция которая определяет, когда игр�
 
         this.timeout(5000);
 
-        const leaderId = 'leader_id';
+        const leaderName = 'player_leader';
 
         // Setup: Initialize game
         const gameRef = db.doc('games/game1');
@@ -34,12 +34,14 @@ describe("Функция которая определяет, когда игр�
         });
     
         // Setup: Initialize leader in points player
-        await gameRef.collection('players').doc(leaderId).set({
+        await gameRef.collection('players').doc().set({
+            name: leaderName,
             points: 10,
         });
 
         // Setup: Initialize 2nd player
-        await gameRef.collection('players').doc('player2_id').set({
+        await gameRef.collection('players').doc().set({
+            name: 'player',
             points: 8,
         }); 
 
@@ -57,7 +59,7 @@ describe("Функция которая определяет, когда игр�
             })
         )
 
-        expect(winner).to.equal(leaderId);
+        expect(winner).to.equal(leaderName);
     });
 
     it("Игра не заканчивается, пока каждый игрок не сделал свои K-ходов.", async function () {
@@ -70,12 +72,14 @@ describe("Функция которая определяет, когда игр�
         });
     
         // Setup: Initialize leader in points player
-        await gameRef.collection('players').doc('player1_id').set({
+        await gameRef.collection('players').doc().set({
+            name: 'player1',
             points: 5,
         });
 
         // Setup: Initialize 2nd player
-        await gameRef.collection('players').doc('player2_id').set({
+        await gameRef.collection('players').doc().set({
+            name: 'player2',
             points: 5,
         });
 
@@ -110,11 +114,13 @@ describe("Функция которая определяет, когда игр�
     
         // Setup: Initialize leader in points player
         await gameRef.collection('players').doc('player1_id').set({
+            name: 'player1',
             points: 10,
         });
 
         // Setup: Initialize 2nd player
         await gameRef.collection('players').doc('player2_id').set({
+            name: 'player2',
             points: 10,
         });
 
