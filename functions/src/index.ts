@@ -27,29 +27,20 @@ exports.checkWinner = functions.firestore.document('/games/{gameId}')
             .limit(2)
             .get();
 
-        const leader: FirebaseFirestore.DocumentData = await new Promise (resolve => {
-          let firstResult: FirebaseFirestore.DocumentData;
-          leaderSnapshot.forEach(function(doc) {
-            const data = doc.data();
-            if (firstResult) {
-              // Игра идет до тех пор пока у одного из участников не будет больше очков, чем у других.
-              if (firstResult.points == data.points) {
-                resolve();
-              } else {
-                resolve(firstResult);
-              }
-            }
-            firstResult = {...data, id: doc.id};
-          })
-        });
+        let leaderPlayers: Array<FirebaseFirestore.DocumentData> = [];
+
+        leaderSnapshot.forEach(function(doc) {
+          const data = doc.data();
+          leaderPlayers.push({...data, id: doc.id});
+        })
 
         // Игра не заканчивается, пока у одного из участников больше очков, чем у других
-        if (!leader) {
+        if (leaderPlayers[0].points == leaderPlayers[1].points) {
           return;
         }
 
         // Must return a Promise
         return firestore.doc(`games/${gameId}`).update({
-            winner: leader.id,
+            winner: leaderPlayers[0].id,
         })
     });
