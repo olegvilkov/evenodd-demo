@@ -16,7 +16,7 @@ export default function userReducer (state = initialState, action: UserActionTyp
     case USER_UPDATE_PROFILE_SUCCESS:
       const user = action.payload;
       return {...state,
-        name: user.displayName,
+        name: user.displayName || "",
         uid: user.uid,
         isAnonymous: user.isAnonymous,
       };

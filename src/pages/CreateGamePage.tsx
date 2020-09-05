@@ -17,8 +17,8 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 /**
  * Экран "Создать игру"
  */
-function CreateGamePage ({ currentUsername, createGame }: PropsFromRedux) {
-    const isEmpty = (str: string) => str.replace(/\s*/, '') ? true : false;
+function CreateGamePage ({ currentUsername="", createGame }: PropsFromRedux) {
+    const isEmpty = (str: string) => str.trim() ? true : false;
     const [playersForStart, setPlayersForStart] = useState(2);
     const [playersForStartIsValid, setPlayersForStartIsValid] = useState(true);
     const [username, setUsername] = useState(currentUsername);
