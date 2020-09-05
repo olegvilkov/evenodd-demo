@@ -49,7 +49,7 @@ function GameWaiting ({game, waitTurn=true}: Props & PropsFromRedux) {
                 }
             })
         }
-        return () => {f7.dialog.close()}
+        return () => {if (!game.winner) f7.dialog.close()}
     }, [game, waitTurn]);
 
     return null;
