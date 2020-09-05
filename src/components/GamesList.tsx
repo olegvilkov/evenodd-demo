@@ -142,6 +142,7 @@ function GamesListPage ({ games=[], user }: PropsFromRedux & Props) {
                             key={game.id}
                             title={game.name}
                             after={`Победитель: ${game.winner}`}
+                            footer={game.leader == user.uid ? 'Вы победитель' : ''}
                         />
                 )}
             </List>
