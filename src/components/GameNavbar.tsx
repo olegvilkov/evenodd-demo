@@ -31,12 +31,27 @@ function GameNavbar ({
 
     let subtitle;
 
+    const num2str = (number: number, words: Array<string>) => {
+        return words[(number % 100 > 4 && number % 100 < 20) ? 2 : [2, 0, 1, 1, 1, 2][(number % 10 < 5) ? number % 10 : 5]];
+    }
+
+    const turns = () => {
+        if (game.playersCount != game.playersForStart) {
+            return '';
+        }
+
+        const turns = Math.max(game.turns, 0);
+        
+        return `До окончания игры ${turns} ${num2str(turns, ['ход', 'хода', 'ходов'])}.`;
+    }
+
+    const players = () => {
+        return `(${game.playersCount}/${game.playersForStart})`
+    }
+
     // Информация об игре
     if (game.id) {
-        subtitle = game.name ?
-            `${game.name} (${game.playersCount}/${game.playersForStart})`
-            :
-            'Загрузка данных об игре...';
+        subtitle = game.name ? `${game.name} ${players()} ${turns()}` : 'Загрузка данных об игре...';
     }
 
     return (
