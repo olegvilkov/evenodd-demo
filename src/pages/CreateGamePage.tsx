@@ -47,7 +47,7 @@ function CreateGamePage ({ currentUsername="", createGame }: PropsFromRedux) {
                 placeholder="Количество игроков"
                 value={playersForStart}
                 onValidate={(isValid: boolean) => setPlayersForStartIsValid(isValid)}
-                onInput={(e) => setPlayersForStart(e.target.value)}
+                onInput={(e) => setPlayersForStart(e.target.value*1)}
                 errorMessage="Должно быть больше или равно 2"
                 required
                 validate
