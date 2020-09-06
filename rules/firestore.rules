@@ -39,7 +39,7 @@ service cloud.firestore {
             && checkAffectedFields(allowFields)
             && request.resource.data.name != ''
             && request.resource.data.playersForStart >= 2
-            && request.resource.data.order.hasOnly([uid])
+            && request.resource.data.order.toSet() == [uid].toSet()
             && player.id == uid
         }
 

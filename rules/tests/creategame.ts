@@ -16,6 +16,8 @@ const player = {
   points: 0,
 };
 
+type IGame = typeof game & {notAllowedField?: string};
+
 const gameSetup = async (options?: ISetup) => {
   const db = await setup(options);
   const gameDocRef = db.collection("games").doc();
@@ -24,7 +26,7 @@ const gameSetup = async (options?: ISetup) => {
   return {gameDocRef, playersDocRef, db};
 }
 
-const createGameWithPlayer = async (game={}, player={}, options?: ISetup) => {
+const createGameWithPlayer = async (game: IGame, player={}, options?: ISetup) => {
   const {gameDocRef, playersDocRef, db} = await gameSetup(options);
 
   return db.runTransaction(function(transaction) {
@@ -36,7 +38,7 @@ const createGameWithPlayer = async (game={}, player={}, options?: ISetup) => {
   })
 }
 
-const createGameWithoutPlayer = async (game={}, options: ISetup) => {
+const createGameWithoutPlayer = async (game: IGame, options: ISetup) => {
   const {gameDocRef, db} = await gameSetup(options);
 
   return db.runTransaction(function(transaction) {
@@ -53,7 +55,7 @@ describe("Security rules for Create Game", async () => {
       clearData();
     });
 
-    it("Can create game with all required rules", function () {
+    it("Should create game with join player", function () {
       return assertSucceeds(
         createGameWithPlayer(
           game,
@@ -61,7 +63,7 @@ describe("Security rules for Create Game", async () => {
           { auth: myAuth }
         )
       );
-    })
+    }).timeout(5000); // Первый тест выполняется дольше, если эмулятор только запустился
 
     it("Can't create game with empty name", async () => {
       return assertFails(
@@ -71,7 +73,7 @@ describe("Security rules for Create Game", async () => {
           { auth: myAuth }
         )
       );
-    });
+    })
 
     it("Can't create game with players for start game < 2", async () => {
       return assertFails(
@@ -86,7 +88,7 @@ describe("Security rules for Create Game", async () => {
     it("Can't create game without add user to order", async () => {
       return assertFails(
         createGameWithPlayer(
-          {...game, order: ''},
+          {...game, order: []},
           player,
           { auth: myAuth }
         )
