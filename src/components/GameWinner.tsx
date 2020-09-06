@@ -26,7 +26,7 @@ export default function GameWinner ({game}: Props) {
                         text: 'Ок',
                         close: false,
                         onClick: () => {
-                            f7.views.main.router.back(redirectPath);
+                            f7.views.main.router.navigate(redirectPath, {ignoreCache: true});
                             winnerDialog.close()
                         }
                     }
@@ -41,8 +41,6 @@ export default function GameWinner ({game}: Props) {
             return () => winnerDialog.close();
         }
     }, [winner]);
-
-    console.log('-------- winner', winner)
 
     return null;
 }
