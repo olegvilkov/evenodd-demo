@@ -1,15 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
-import { selectUser } from 'redux/reducers/user/selector';
+import { selectUserName } from 'redux/reducers/user/selector';
 import { IUserState } from 'redux/reducers/user/types';
 import { joinGame } from 'redux/sagas/joingame/actions';
 
-import { Page, List, ListInput, ListButton } from 'framework7-react';
+import { Page, List, ListButton } from 'framework7-react';
 import GameNavbar from 'components/GameNavbar';
 import withGameSubscription from 'hoc/GameSubscription';
+import UserNameInput from 'components/UserNameInput';
 
 const mapState = (state: IUserState) => ({
-    user: selectUser(state),
+    currentUsername: selectUserName(state),
 });
 
 const connector = connect(mapState, { joinGame });
@@ -20,18 +21,19 @@ type PropsFromNavigation = {gameId: string};
  * Экран "Присоединиться к игре"
  * @todo Добавить логику если игра заполнилась до вступления игрока
  */
-function JoinGamePage ({ gameId, user, joinGame }: PropsFromRedux & PropsFromNavigation) {
+function JoinGamePage ({ currentUsername, gameId, joinGame }: PropsFromRedux & PropsFromNavigation) {
 
-    const [username, setUsername] = useState(user.name);
+    const [username, setUsername] = useState(currentUsername);
+    const [usernameIsValid, setUsernameIsValid] = useState( false );
+    const [usernameIsTouched, setUsernameIsTouched] = useState( false );
 
-    useEffect(()=> {
-        setUsername(user.name);
-    }, [user.name]);
-
-    const submit = (e: Event) => {
+    const onSubmit = (e: Event) => {
         e.preventDefault();
         e.stopPropagation();
-        joinGame(gameId, username);
+        setUsernameIsTouched(true);
+        if (usernameIsValid) {
+            joinGame(gameId, username);
+        }
     }
 
     return (
@@ -42,17 +44,16 @@ function JoinGamePage ({ gameId, user, joinGame }: PropsFromRedux & PropsFromNav
         />
         <Page loginScreen>
             
-            <List form onSubmit={(e)=>submit(e)}>
-                <ListInput
-                label="Имя"
-                type="text"
-                placeholder="Имя участника"
-                value={username}
-                onInput={(e) => setUsername(e.target.value)}
-                />
-            </List>
+        <UserNameInput
+                value={currentUsername}
+                touch={usernameIsTouched}
+                onSubmit={onSubmit}
+                onValidate={setUsernameIsValid}
+                onChange={setUsername}
+            />
+
             <List>
-                <ListButton onClick={(e)=>submit(e)}>Присоединиться</ListButton>
+                <ListButton onClick={(e)=>onSubmit(e)}>Присоединиться</ListButton>
             </List>
         </Page>
         </>

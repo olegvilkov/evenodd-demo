@@ -6,6 +6,7 @@ import { IUserState } from 'redux/reducers/user/types';
 
 import { Page, List, Navbar, ListInput, ListButton } from 'framework7-react';
 import Avatar from 'components/Avatar';
+import UserNameInput from 'components/UserNameInput';
 
 const mapState = (state: IUserState) => ({
     currentUsername: selectUserName(state),
@@ -18,29 +19,13 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
  * Экран "Создать игру"
  */
 function CreateGamePage ({ currentUsername="", createGame }: PropsFromRedux) {
-    const isEmpty = (str: string) => str.trim() ? true : false;
     const [playersForStart, setPlayersForStart] = useState(2);
-    const [playersForStartIsValid, setPlayersForStartIsValid] = useState(true);
+    const [playersForStartIsValid, setPlayersForStartIsValid] = useState( true );
     const [username, setUsername] = useState(currentUsername);
-    const [usernameIsValid, setUsernameIsValid] = useState( isEmpty(currentUsername) );
-    const [usernameIsTouched, setUsernameIsTouched] = useState(false);
+    const [usernameIsValid, setUsernameIsValid] = useState( false );
+    const [usernameIsTouched, setUsernameIsTouched] = useState( false );
 
-    useEffect(()=>{
-        setUsername(currentUsername);
-        validateUsername( currentUsername );
-    }, [currentUsername])
-
-    const validateUsername = (username: string) => {
-        setUsernameIsValid ( isEmpty(username) );
-    }
-
-    const setAndValidateUsername = (value: string) => {
-        setUsername(value);
-        validateUsername(value);
-        setUsernameIsTouched(true);
-    }
-    
-    const submit = (e: Event) => {
+    const onSubmit = (e: Event) => {
         e.preventDefault();
         e.stopPropagation();
         setUsernameIsTouched(true);
@@ -54,7 +39,7 @@ function CreateGamePage ({ currentUsername="", createGame }: PropsFromRedux) {
             <Navbar title="Создать игру" backLink={true}>
                 <Avatar />
             </Navbar>
-            <List form onSubmit={(e)=>submit(e)}>
+            <List form onSubmit={(e)=>onSubmit(e)}>
                 <ListInput
                 label="Количество игроков"
                 type="number"
@@ -68,20 +53,15 @@ function CreateGamePage ({ currentUsername="", createGame }: PropsFromRedux) {
                 validate
                 />
             </List>
-            <List form onSubmit={(e)=>submit(e)}>
-                <ListInput
-                label="Имя"
-                type="text"
-                placeholder="Имя участника"
-                errorMessage="Обязательное поле"
-                value={username}
-                onInput={(e) => setAndValidateUsername(e.target.value)}
-                errorMessageForce={!usernameIsValid && usernameIsTouched}
-                onBlur={() => setUsernameIsTouched(true)}
-                />
-            </List>
+            <UserNameInput
+                value={currentUsername}
+                touch={usernameIsTouched}
+                onSubmit={onSubmit}
+                onValidate={setUsernameIsValid}
+                onChange={setUsername}
+            />
             <List>
-                <ListButton onClick={(e)=>submit(e)}>Создать</ListButton>
+                <ListButton onClick={(e)=>onSubmit(e)}>Создать</ListButton>
             </List>
         </Page>
     )
