@@ -4,14 +4,6 @@
 
 [Поиграть можно тут](https://evenodd-demo.web.app).
 
-![](.readme/evenodd-demo.1.png)
-![](.readme/evenodd-demo.2.png)
-![](.readme/evenodd-demo.3.png)
-![](.readme/evenodd-demo.4.png)
-![](.readme/evenodd-demo.5.png)
-![](.readme/evenodd-demo.6.png)
-![](.readme/evenodd-demo.7.png)
-
 ## Стек
 React, Framework7, Flow/TypeScript, Firestore, Firebase functions, Redux, redux-saga
 
@@ -57,3 +49,13 @@ React, Framework7, Flow/TypeScript, Firestore, Firebase functions, Redux, redux-
 
 # TODO
 [TODO.md](TODO.md)
+
+# Превью
+![](.readme/evenodd-demo.1.png)
+![](.readme/evenodd-demo.2.png)
+![](.readme/evenodd-demo.3.png)
+![](.readme/evenodd-demo.4.png)
+![](.readme/evenodd-demo.5.png)
+![](.readme/evenodd-demo.6.png)
+![](.readme/evenodd-demo.7.png)
+![](.readme/evenodd-demo.8.png)
