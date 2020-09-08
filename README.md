@@ -2,7 +2,7 @@
 
 Простая многопользовательская игра, в которой игроки загадывают числа и пытаются отгадать, чётное или нечётное число загадал противник.
 
-Поиграть в игру можно тут: https://evenodd-demo.web.app
+[Поиграть можно тут](https://evenodd-demo.web.app).
 
 ## Стек
 React, Framework7, Flow/TypeScript, Firestore, Firebase functions, Redux, redux-saga
