@@ -4,6 +4,8 @@
 
 [Поиграть можно тут](https://evenodd-demo.web.app).
 
+
+
 ## Стек
 React, Framework7, Flow/TypeScript, Firestore, Firebase functions, Redux, redux-saga
 
@@ -46,3 +48,6 @@ React, Framework7, Flow/TypeScript, Firestore, Firebase functions, Redux, redux-
 
 ## Деплой
 Выполнить деплой статического клиента на Firebase hosting можно с помощью команды `npm run deploy`. Если открыть сайт https://evenodd-demo.web.app, можно поиграть в игру.
+
+# TODO
+[TODO.md](TODO.md)
